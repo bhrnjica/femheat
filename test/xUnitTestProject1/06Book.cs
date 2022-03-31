@@ -1,5 +1,4 @@
-﻿using GaussianIntegrationApp;
-using NumIntegration;
+﻿using NumIntegration;
 using System;
 using Xunit;
 

@@ -21,7 +21,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\src\GaussianIntegrationApp\GaussianIntegrationApp.csproj" />
     <ProjectReference Include="..\..\src\NumIntegration\NumIntegration.csproj" />
   </ItemGroup>
 

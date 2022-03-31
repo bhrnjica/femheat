@@ -30,6 +30,8 @@ namespace NumIntegration
                 for (int i = 0; i < nodes.Length; i++)
                 {
                     x += nodes[i].x * shape[i](pt);
+                    y += nodes[i].y * shape[i](pt);
+                    z += nodes[i].z * shape[i](pt);
                 }
             }
 

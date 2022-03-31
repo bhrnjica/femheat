@@ -1,5 +1,16 @@
 ﻿namespace NumIntegration
 {
+    public enum CoorType
+    {
+        Point,
+        Line,
+        Rectangular,
+        Cubical,
+        Polar,
+        Cylindrical,
+        Spherical,
+
+    }
     public enum FEType
     {
         None,

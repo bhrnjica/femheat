@@ -1,4 +1,3 @@
-using GaussianIntegrationApp;
 using NumIntegration;
 using System;
 using Xunit;

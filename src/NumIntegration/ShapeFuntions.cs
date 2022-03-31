@@ -50,10 +50,10 @@ namespace NumIntegration
         public static double NTC10(Point p) => 27.0 * p.x * p.y * (1.0 - p.x - p.y);
 
         //Rectangle Linear Finite element shape function and its derivatives
-        public static double NRL1(Point p) => 0.25 * (1.0 - p.x) * (1.0 - p.y);
-        public static double NRL2(Point p) => 0.25 * (1.0 + p.x) * (1.0 - p.y);
-        public static double NRL3(Point p) => 0.25 * (1.0 + p.x) * (1.0 + p.y);
-        public static double NRL4(Point p) => 0.25 * (1.0 - p.x) * (1.0 + p.y);
+        public static double NRL1(Point p) => 0.25 * (1.0 - p.x - p.y + p.x * p.y);
+        public static double NRL2(Point p) => 0.25 * (1.0 + p.x - p.y - p.x * p.y);
+        public static double NRL3(Point p) => 0.25 * (1.0 + p.x + p.y + p.x * p.y);
+        public static double NRL4(Point p) => 0.25 * (1.0 - p.x + p.y - p.x * p.y);
 
 
         //Rectangle Quadratic Finite element 8 -nodes
