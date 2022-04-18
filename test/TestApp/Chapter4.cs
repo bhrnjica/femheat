@@ -21,7 +21,7 @@ namespace Book
             //numeric object
             var numI = new Numeric(fe1);
 
-            //create intergal function
+            //podintegralna funkcija
             var fun = "x*e^(2*x)";
 
             //solutions
@@ -75,14 +75,14 @@ namespace Book
                 fo = FEOrder.Linear,
             };
 
-            //moment inercije u polarnim koordinatama
-            var strInertia = "(x^2-x)*sin(y)";
+            //podintegralna funkcija
+            var fun = "(x^2-x)*sin(y)";
 
             var numI = new Numeric(fe1);
 
-            var value1 = numI.Integrate(strInertia, DOP.Linear);
-            var value2 = numI.Integrate(strInertia, DOP.Quadratic);
-            var value3 = numI.Integrate(strInertia, DOP.Cubic);
+            var value1 = numI.Integrate(fun, DOP.Linear);
+            var value2 = numI.Integrate(fun, DOP.Quadratic);
+            var value3 = numI.Integrate(fun, DOP.Cubic);
 
             //ispis rezultata (4211700 tacan rezultat)
             Console.WriteLine($" I={value1}, 4 gaussove tačke.");
@@ -113,13 +113,13 @@ namespace Book
             var jacobian = new Jacobian(FEType.Line, FEOrder.Linear);
 
             //podintegralna funkcija
-            var strInertia = "(Sin(y)*Sin(y))*x*x*x";
+            var fun = "(Sin(y)*Sin(y))*x*x*x";
 
             var numI = new Numeric(fe1);
 
-            var value1 = numI.Integrate(strInertia, DOP.Linear);
-            var value2 = numI.Integrate(strInertia, DOP.Quadratic);
-            var value3 = numI.Integrate(strInertia, DOP.Cubic);
+            var value1 = numI.Integrate(fun, DOP.Linear);
+            var value2 = numI.Integrate(fun, DOP.Quadratic);
+            var value3 = numI.Integrate(fun, DOP.Cubic);
 
             //ispis rezultata
             Console.WriteLine($" I={value1}.");
@@ -145,13 +145,13 @@ namespace Book
             var jacobian = new Jacobian(FEType.Line, FEOrder.Linear);
 
             //podintegralna funkcija
-            var strInertia = "x*y*z";
+            var fun = "x*y*z";
 
             var numI = new Numeric(fe1);
 
-            var value1 = numI.Integrate(strInertia, DOP.Linear);
-            var value2 = numI.Integrate(strInertia, DOP.Quadratic);
-            var value3 = numI.Integrate(strInertia, DOP.Cubic);
+            var value1 = numI.Integrate(fun, DOP.Linear);
+            var value2 = numI.Integrate(fun, DOP.Quadratic);
+            var value3 = numI.Integrate(fun, DOP.Cubic);
 
             //ispis rezultata
             Console.WriteLine($"a) I={value1} 4 gaussova tačka.");
@@ -183,13 +183,13 @@ namespace Book
             var jacobian = new Jacobian(FEType.Line, FEOrder.Linear);
 
             //podintegralna funkcija
-            var strInertia = "x*y*z";
+            var fun = "x*y*z";
 
             var numI = new Numeric(fe1);
 
-            var value1 = numI.Integrate(strInertia, DOP.Linear);
-            var value2 = numI.Integrate(strInertia, DOP.Quadratic);
-            var value3 = numI.Integrate(strInertia, DOP.Cubic);
+            var value1 = numI.Integrate(fun, DOP.Linear);
+            var value2 = numI.Integrate(fun, DOP.Quadratic);
+            var value3 = numI.Integrate(fun, DOP.Cubic);
 
             //ispis rezultata
             Console.WriteLine($"a) I={value1} 8 gaussovih tačaka.");
@@ -217,18 +217,18 @@ namespace Book
                 fo = FEOrder.Linear,
             };
 
-            //create coordinate and jacobian object
+            //koordinate i jacobian
             var coor = new Coordinates(FEType.Line, FEOrder.Linear);
             var jacobian = new Jacobian(FEType.Line, FEOrder.Linear);
 
-            //moment inercije u polarnim koordinatama
-            var strInertia = "1.0";
+            //podintegralna funkcija
+            var fun = "1.0";
 
             var numI = new Numeric(fe1);
 
-            var value1 = numI.Integrate(strInertia, DOP.Linear);
-            var value2 = numI.Integrate(strInertia, DOP.Quadratic);
-            var value3 = numI.Integrate(strInertia, DOP.Cubic);
+            var value1 = numI.Integrate(fun, DOP.Linear);
+            var value2 = numI.Integrate(fun, DOP.Quadratic);
+            var value3 = numI.Integrate(fun, DOP.Cubic);
 
             ///ispis rezultata (4 tacan rezultat)
             Console.WriteLine($" a) - Moment inercije četvrtine prstena I={value1}, 2 gaussove tačke.");
@@ -253,18 +253,18 @@ namespace Book
                 fo = FEOrder.Linear,
             };
 
-            //create coordinate and jacobian object
+            //koordinate i jacobian
             var coor = new Coordinates(FEType.Line, FEOrder.Linear);
             var jacobian = new Jacobian(FEType.Line, FEOrder.Linear);
 
-            //moment inercije u polarnim koordinatama
-            var strInertia = "1.0";
+            //podintegralna funkcija
+            var fun = "1.0";
 
             var numI = new Numeric(fe1);
 
-            var value1 = numI.Integrate(strInertia, DOP.Linear);
-            var value2 = numI.Integrate(strInertia, DOP.Quadratic);
-            var value3 = numI.Integrate(strInertia, DOP.Cubic);
+            var value1 = numI.Integrate(fun, DOP.Linear);
+            var value2 = numI.Integrate(fun, DOP.Quadratic);
+            var value3 = numI.Integrate(fun, DOP.Cubic);
 
             ///ispis rezultata (4 tacan rezultat)
             Console.WriteLine($" a) - Moment inercije četvrtine prstena I={value1}, 2 gaussove tačke.");
@@ -289,18 +289,18 @@ namespace Book
                 fo = FEOrder.Linear,
             };
 
-            //create coordinate and jacobian object
+            //koordinate i jacobian
             var coor = new Coordinates(FEType.Line, FEOrder.Linear);
             var jacobian = new Jacobian(FEType.Line, FEOrder.Linear);
 
-            //moment inercije u polarnim koordinatama
-            var strInertia = "6.0*x*y";
+            //podintegralna funkcija
+            var fun = "6.0*x*y";
 
             var numI = new Numeric(fe1);
 
-            var value1 = numI.Integrate(strInertia, DOP.Linear);
-            var value2 = numI.Integrate(strInertia, DOP.Quadratic);
-            var value3 = numI.Integrate(strInertia, DOP.Cubic);
+            var value1 = numI.Integrate(fun, DOP.Linear);
+            var value2 = numI.Integrate(fun, DOP.Quadratic);
+            var value3 = numI.Integrate(fun, DOP.Cubic);
 
             ///ispis rezultata (4 tacan rezultat)
             Console.WriteLine($" a) - Moment inercije četvrtine prstena I={value1}, 2 gaussove tačke.");
