@@ -18,97 +18,97 @@ namespace NumIntegration
             _shapeDerivatives = getShapeDerivatives();
         }
 
-public double Calculate(Node[] nodes, Point pt)
-{
-var shapeDerivatives = _shapeDerivatives;
+    public double Calculate(Node[] nodes, Point pt)
+    {
+    var sDer = _shapeDerivatives;
             
-if (_ft == FEType.Line)
-{
-    double jx = 0;
-    double jy = 0;
-    double jz = 0;
-    for (int i = 0; i < nodes.Length; i++)
+    if (_ft == FEType.Line)
     {
-        jx += nodes[i].x * shapeDerivatives[i](pt);
-        jy += nodes[i].y * shapeDerivatives[i](pt);
-        jz += nodes[i].z * shapeDerivatives[i](pt);
+        double jx = 0;
+        double jy = 0;
+        double jz = 0;
+        for (int i = 0; i < nodes.Length; i++)
+        {
+            jx += nodes[i].x * sDer[i](pt);
+            jy += nodes[i].y * sDer[i](pt);
+            jz += nodes[i].z * sDer[i](pt);
+        }
+        //
+        var j = Math.Sqrt(jx*jx + jy*jy + jz*jz); 
+        return j;
     }
-    //
-    var j = Math.Sqrt(jx*jx + jy*jy + jz*jz); 
-    return j;
-}
-else if (_ft == FEType.Triangle || _ft == FEType.Rectangle)
-{
-    double l = FEType.Triangle == _ft ? 0.5 : 1;
+    else if (_ft == FEType.Triangle || _ft == FEType.Rectangle)
+    {
+        double l = FEType.Triangle == _ft ? 0.5 : 1;
 
-    //i 
-    double ai = 0, bi = 0, ci = 0, di = 0;
-    for (int i = 0; i < nodes.Length; i++)
-    {
-        ai += nodes[i].y * shapeDerivatives[i * 2](pt);
-        bi += nodes[i].z * shapeDerivatives[i * 2](pt);
-        ci += nodes[i].y * shapeDerivatives[i * 2 + 1](pt);
-        di += nodes[i].z * shapeDerivatives[i * 2 + 1](pt);
-    }
-    var d1 = (ai * di - bi * ci);
-    //j 
-    double aj = 0, bj = 0, cj = 0, dj = 0;
-    for (int i = 0; i < nodes.Length; i++)
-    {
-        aj += nodes[i].x * shapeDerivatives[i * 2](pt);
-        bj += nodes[i].z * shapeDerivatives[i * 2](pt);
-        cj += nodes[i].x * shapeDerivatives[i * 2 + 1](pt);
-        dj += nodes[i].z * shapeDerivatives[i * 2 + 1](pt);
-    }
-    var d2 = (aj * dj - bj * cj);
-    // 
-    double ak = 0, bk = 0, ck = 0, dk = 0;
-    for (int i = 0; i < nodes.Length; i++)
-    {
-        ak += nodes[i].x * shapeDerivatives[i * 2](pt);
-        bk += nodes[i].y * shapeDerivatives[i * 2](pt);
-        ck += nodes[i].x * shapeDerivatives[i * 2 + 1](pt);
-        dk += nodes[i].y * shapeDerivatives[i * 2 + 1](pt);
-    }
-    var d3 = (ak * dk - bk * ck);
-    //
-    return l * Math.Sqrt(d1 * d1 + d2 * d2 + d3 * d3);
+        //i 
+        double ai = 0, bi = 0, ci = 0, di = 0;
+        for (int i = 0; i < nodes.Length; i++)
+        {
+            ai += nodes[i].y * sDer[i * 2](pt);
+            bi += nodes[i].z * sDer[i * 2](pt);
+            ci += nodes[i].y * sDer[i * 2 + 1](pt);
+            di += nodes[i].z * sDer[i * 2 + 1](pt);
+        }
+        var d1 = (ai * di - bi * ci);
+        //j 
+        double aj = 0, bj = 0, cj = 0, dj = 0;
+        for (int i = 0; i < nodes.Length; i++)
+        {
+            aj += nodes[i].x * sDer[i * 2](pt);
+            bj += nodes[i].z * sDer[i * 2](pt);
+            cj += nodes[i].x * sDer[i * 2 + 1](pt);
+            dj += nodes[i].z * sDer[i * 2 + 1](pt);
+        }
+        var d2 = (aj * dj - bj * cj);
+        // 
+        double ak = 0, bk = 0, ck = 0, dk = 0;
+        for (int i = 0; i < nodes.Length; i++)
+        {
+            ak += nodes[i].x * sDer[i * 2](pt);
+            bk += nodes[i].y * sDer[i * 2](pt);
+            ck += nodes[i].x * sDer[i * 2 + 1](pt);
+            dk += nodes[i].y * sDer[i * 2 + 1](pt);
+        }
+        var d3 = (ak * dk - bk * ck);
+        //
+        return l * Math.Sqrt(d1 * d1 + d2 * d2 + d3 * d3);
 
-}
-else if (_ft == FEType.Tetrahedron || _ft == FEType.Hexaedron)
-{
-    double l = FEType.Tetrahedron == _ft ? 1.0/6.0 : 1;
-    var j = new double[3,3];
-    var index = 0;
-    for (int i = 0; i < nodes.Length; i++)
+    }
+    else if (_ft == FEType.Tetrahedron || _ft == FEType.Hexaedron)
     {
+        double l = FEType.Tetrahedron == _ft ? 1.0/6.0 : 1;
+        var j = new double[3,3];
+        var index = 0;
+        for (int i = 0; i < nodes.Length; i++)
+        {
 
-        j[0,0] += nodes[i].x * shapeDerivatives[index](pt);//p1 derivation
-        j[0,1] += nodes[i].y * shapeDerivatives[index](pt);//p1 derivation
-        j[0,2] += nodes[i].z * shapeDerivatives[index](pt);//p1 derivation
+            j[0,0] += nodes[i].x * sDer[index](pt);
+            j[0,1] += nodes[i].y * sDer[index](pt);
+            j[0,2] += nodes[i].z * sDer[index](pt);
                     
-        index++;
+            index++;
                     
-        j[1,0] += nodes[i].x * shapeDerivatives[index](pt);//p2 derivation
-        j[1,1] += nodes[i].y * shapeDerivatives[index](pt);//p2 derivation
-        j[1,2] += nodes[i].z * shapeDerivatives[index](pt);//p2 derivation
+            j[1,0] += nodes[i].x * sDer[index](pt);
+            j[1,1] += nodes[i].y * sDer[index](pt);
+            j[1,2] += nodes[i].z * sDer[index](pt);
 
-        index++;
+            index++;
 
-        j[2,0] += nodes[i].x * shapeDerivatives[index](pt);//p3 derivation
-        j[2,1] += nodes[i].y * shapeDerivatives[index](pt);//p3 derivation
-        j[2,2] += nodes[i].z * shapeDerivatives[index](pt);//p3 derivation
+            j[2,0] += nodes[i].x * sDer[index](pt);
+            j[2,1] += nodes[i].y * sDer[index](pt);
+            j[2,2] += nodes[i].z * sDer[index](pt);
 
-        index++;
+            index++;
+        }
+        var det = 0.0;
+        for (int i = 0; i < 3; i++)
+            det += (j[0, i] * (j[1, (i + 1) % 3] * j[2, (i + 2) % 3] - j[1, (i + 2) % 3] * j[2, (i + 1) % 3]));
+        return det * l;
     }
-    var det = 0.0;
-    for (int i = 0; i < 3; i++)
-        det += (j[0, i] * (j[1, (i + 1) % 3] * j[2, (i + 2) % 3] - j[1, (i + 2) % 3] * j[2, (i + 1) % 3]));
-    return det * l;
-}
-else
-    throw new NotSupportedException();  
-}
+    else
+        throw new NotSupportedException();  
+    }
 
         public double Calculate2(Node[] nodes, Point pt)
         {

@@ -14,14 +14,14 @@ namespace NumIntegration
 
         //Line Quadratic Finite Element
         public static double dNLQ1(Point p) => p.x - 0.5;
-        public static double dNLQ2(Point p) => p.x + 0.5;
         public static double dNLQ3(Point p) => -2.0 * p.x;
+        public static double dNLQ2(Point p) => p.x + 0.5;
 
         //Line Cubic Finite Element
         public static double dNLC1(Point p) => 0.0625 * (1.0 + 18.0 * p.x - 27.0 * p.x * p.x);
         public static double dNLC2(Point p) => 0.0625 * (-1.0 + 18.0 * p.x + 27.0 * p.x * p.x);
         public static double dNLC3(Point p) => 0.5625 * (-3.0 - 2.0 * p.x + 9.0 * p.x * p.x);
-        public static double dNLC4(Point p) => -0.5625 * (-3.0 - 2.0 * p.x + 9.0 * p.x * p.x);
+        public static double dNLC4(Point p) => -0.5625 * (-3.0 + 2.0 * p.x + 9.0 * p.x * p.x);
 
         //Triangle Linear Finite element
         public static double p1NTL1(Point p) => 1.0;

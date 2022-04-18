@@ -22,7 +22,7 @@ namespace xUnitTestProject1
 
             //
             var fun = "1/(1+x^2)";
-            var ni = new NumericalIntegration(cd);
+            var ni = new Numeric(cd);
 
             var result1 = ni.Integrate(fun, DOP.Linear);
             Assert.Equal(result1, 0.32175, 3);
@@ -53,7 +53,7 @@ namespace xUnitTestProject1
             //skip minus on power
             //
             var fun = "1.0/e^(x^2)";
-            var ni = new NumericalIntegration(cd);
+            var ni = new Numeric(cd);
 
             //correct: 0.746824
 
@@ -84,7 +84,7 @@ namespace xUnitTestProject1
 
             //
             var fun = "Sin(x)";
-            var ni = new NumericalIntegration(cd);
+            var ni = new Numeric(cd);
 
 
             //correct: 2.0

@@ -2,7 +2,7 @@
 
 namespace NumIntegration
 {
-    public class NumericalIntegration
+    public class Numeric
     {
         private Register register = null;
         private ExpressionContext context = null;
@@ -11,7 +11,7 @@ namespace NumIntegration
         readonly FiniteElement _domain;
         readonly string _strExpr;
 
-        public NumericalIntegration(FiniteElement domain)
+        public Numeric(FiniteElement domain)
         {
             _domain = domain;
 
@@ -27,7 +27,7 @@ namespace NumIntegration
             {
                 function = context.CompileGeneric<double>(strExpression);
 
-                GValues gv = GValues.NullsAndWeights(_domain.ft, degreeofPrecision);
+                Gaussians gv = Gaussians.NullsAndWeights(_domain.ft, degreeofPrecision);
 
                 var jac = new Jacobian(_domain.ft, _domain.fo);
                 var coord = new Coordinates(_domain.ft, _domain.fo);
@@ -47,7 +47,6 @@ namespace NumIntegration
                     register.x = x;
                     register.y = y;
                     register.z = z;
-
 
                     var f = function.Evaluate();
 

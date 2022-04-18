@@ -49,7 +49,7 @@
     {
         public Register()
         {
-            //e = Convert.Todouble(Math.E);
+            //e = Convert.ToDouble(Math.E);
             pi = Math.PI;
         }
 

@@ -26,7 +26,7 @@ namespace xUnitTestProject1
 
             //
             var fun = "x*y*z";
-            var ni = new NumericalIntegration(cd);
+            var ni = new Numeric(cd);
             var result = ni.Integrate(fun);
             Assert.Equal(result, 4.69444, 2);
 
@@ -57,7 +57,7 @@ namespace xUnitTestProject1
 
             //
             var fun = "Sin(2.0* x ) * Cos(y +z )";
-            var ni = new NumericalIntegration(cd);
+            var ni = new Numeric(cd);
             var result = ni.Integrate(fun);
             var result1 = ni.Integrate(fun, DOP.Quadratic);
             var result2 = ni.Integrate(fun, DOP.Cubic);
@@ -90,7 +90,7 @@ namespace xUnitTestProject1
             //
             var fun = "1.0/(Sqrt((1.0-x-y)*(1.0-x-y) + z*z))";
 
-            var ni = new NumericalIntegration(cd);
+            var ni = new Numeric(cd);
             var result = ni.Integrate(fun);
             var result1 = ni.Integrate(fun, DOP.Quadratic);
             var result2 = ni.Integrate(fun, DOP.Cubic);
@@ -123,7 +123,7 @@ namespace xUnitTestProject1
             //
             var fun = "Sqrt(x+y+z)";
 
-            var ni = new NumericalIntegration(cd);
+            var ni = new Numeric(cd);
             var result = ni.Integrate(fun);
             var result1 = ni.Integrate(fun, DOP.Quadratic);
             var result2 = ni.Integrate(fun, DOP.Cubic);

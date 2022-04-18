@@ -1,7 +1,5 @@
 ﻿using Book;
 using NumIntegration;
 
-Chapter4.Example6();
+Chapter4.Example_4612();
 return;
-Chapter4.Example2();
-Chapter3.Example1();

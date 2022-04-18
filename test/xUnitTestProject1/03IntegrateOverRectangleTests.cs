@@ -24,7 +24,7 @@ namespace xUnitTestProject1
 
             //
             var fun = "x+y";
-            var ni = new NumericalIntegration(cd);
+            var ni = new Numeric(cd);
             var result = ni.Integrate(fun);
             Assert.Equal(result, 16.0, 3) ;
 
@@ -53,7 +53,7 @@ namespace xUnitTestProject1
 
             //
             var fun = "x*y";
-            var ni = new NumericalIntegration(cd);
+            var ni = new Numeric(cd);
             var result = ni.Integrate(fun);
             Assert.Equal(result, 144.0, 3);
 
@@ -84,7 +84,7 @@ namespace xUnitTestProject1
             //correct:0.02597016274668535
 
             var fun = "Sin(x*y)/(e^(x+y))";
-            var ni = new NumericalIntegration(cd);
+            var ni = new Numeric(cd);
             var result = ni.Integrate(fun);
             Assert.Equal(result, -0.007506469163738325, 2);
 

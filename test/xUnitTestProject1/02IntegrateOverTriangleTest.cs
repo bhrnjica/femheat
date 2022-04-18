@@ -23,7 +23,7 @@ namespace xUnitTestProject1
 
             //
             var fun = "x*y";
-            var ni = new NumericalIntegration(cd);
+            var ni = new Numeric(cd);
             var result = ni.Integrate(fun);
 
             Assert.Equal(result, 35.9999, 3) ;
@@ -48,7 +48,7 @@ namespace xUnitTestProject1
             var fun = "x*Sqrt(1.0 -y)";
 
 
-            var ni = new NumericalIntegration(cd);
+            var ni = new Numeric(cd);
 
             var result = ni.Integrate(fun);
             //0.14282513652961193
@@ -85,7 +85,7 @@ namespace xUnitTestProject1
 
             //e^(-1*x^2/2)
             var fun = "e^(x+y)";// "Power(e,x+y)";
-            var ni = new NumericalIntegration(cd);
+            var ni = new Numeric(cd);
             var result = ni.Integrate(fun);
 
             Assert.Equal(result, 9.7, 1);

@@ -30,7 +30,7 @@ namespace xUnitTestProject1
 
             //
             var fun = "x*y*z";
-            var ni = new NumericalIntegration(cd);
+            var ni = new Numeric(cd);
 
             var result = ni.Integrate(fun);
             var result1 = ni.Integrate(fun, DOP.Quadratic);
@@ -64,7 +64,7 @@ namespace xUnitTestProject1
 
             //609.118
             var fun = "(x*x+1) * Sqrt(y+z)";
-            var ni = new NumericalIntegration(cd);
+            var ni = new Numeric(cd);
 
             var result = ni.Integrate(fun);
             var result1 = ni.Integrate(fun, DOP.Quadratic);
@@ -98,7 +98,7 @@ namespace xUnitTestProject1
 
             //77.06811471928427
             var fun = "(x*x+1) / Sqrt(y+z)";
-            var ni = new NumericalIntegration(cd);
+            var ni = new Numeric(cd);
 
             var result = ni.Integrate(fun);
             var result1 = ni.Integrate(fun, DOP.Quadratic);
@@ -131,7 +131,7 @@ namespace xUnitTestProject1
 
             //35.8118794928527 - correct value
             var fun = "Sin(x*x+1)*Sin(x*x+1) * Sqrt(y+z)";
-            var ni = new NumericalIntegration(cd);
+            var ni = new Numeric(cd);
 
             var result = ni.Integrate(fun);
             var result1 = ni.Integrate(fun, DOP.Quadratic);
