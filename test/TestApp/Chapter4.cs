@@ -28,7 +28,8 @@ namespace Book
             var value1 = numI.Integrate(fun, DOP.Linear);
             var value2 = numI.Integrate(fun, DOP.Quadratic);
             var value3 = numI.Integrate(fun, DOP.Cubic);
-                        ///ispis rezultata
+            
+            ///ispis rezultata
             Console.WriteLine($" n = 2; I={value1}.");
             Console.WriteLine($" n = 3; I={value2}.");
             Console.WriteLine($" n = 3; I={value3}.");           

@@ -26,13 +26,13 @@ namespace xUnitTestProject1
             var fun = "x+y";
             var ni = new Numeric(cd);
             var result = ni.Integrate(fun);
-            Assert.Equal(result, 16.0, 3) ;
+            Assert.Equal(16.0, result, 3) ;
 
             var result1 = ni.Integrate(fun, DOP.Quadratic);
-            Assert.Equal(result1, 16.0, 6);
+            Assert.Equal(16.0, result1, 6);
 
             var result2 = ni.Integrate(fun, DOP.Cubic);
-            Assert.Equal(result2, 16.0, 9);
+            Assert.Equal(16.0, result2, 9);
         }
 
         [Fact]
@@ -55,13 +55,13 @@ namespace xUnitTestProject1
             var fun = "x*y";
             var ni = new Numeric(cd);
             var result = ni.Integrate(fun);
-            Assert.Equal(result, 144.0, 3);
+            Assert.Equal(144.0, result, 3);
 
             var result1 = ni.Integrate(fun, DOP.Quadratic);
-            Assert.Equal(result1, 144.0, 6);
+            Assert.Equal(144.0, result1, 6);
 
             var result2 = ni.Integrate(fun, DOP.Cubic);
-            Assert.Equal(result2, 144.0, 9);
+            Assert.Equal(144.0, result2, 9);
         }
 
 
@@ -86,13 +86,13 @@ namespace xUnitTestProject1
             var fun = "Sin(x*y)/(e^(x+y))";
             var ni = new Numeric(cd);
             var result = ni.Integrate(fun);
-            Assert.Equal(result, -0.007506469163738325, 2);
+            Assert.Equal(-0.007506469163738325, result, 2);
 
             var result1 = ni.Integrate(fun, DOP.Quadratic);
-            Assert.Equal(result1, 0.022335128362979243, 2);
+            Assert.Equal(0.022335128362979243, result1, 2);
 
             var result2 = ni.Integrate(fun, DOP.Cubic);
-            Assert.Equal(result2, 0.025970162746, 2);
+            Assert.Equal(0.025970162746, result2, 2);
         }
 
 

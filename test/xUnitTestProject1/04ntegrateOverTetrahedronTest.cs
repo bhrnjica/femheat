@@ -28,13 +28,13 @@ namespace xUnitTestProject1
             var fun = "x*y*z";
             var ni = new Numeric(cd);
             var result = ni.Integrate(fun);
-            Assert.Equal(result, 4.69444, 2);
+            Assert.Equal(4.69444, result, 2);
 
             var result1 = ni.Integrate(fun, DOP.Quadratic);
-            Assert.Equal(result1, 4.69444, 5);
+            Assert.Equal(4.69444, result1, 5);
 
             var result2 = ni.Integrate(fun, DOP.Cubic);
-            Assert.Equal(result2, 4.69444, 5);
+            Assert.Equal(4.69444, result2, 5);
         }
 
         [Fact]
@@ -62,11 +62,11 @@ namespace xUnitTestProject1
             var result1 = ni.Integrate(fun, DOP.Quadratic);
             var result2 = ni.Integrate(fun, DOP.Cubic);
            
-            Assert.Equal(result, 0.74985164, 2);
+            Assert.Equal(0.74985164, result, 2);
 
-            Assert.Equal(result1, 0.795894, 5);
+            Assert.Equal(0.795894, result1, 5);
 
-            Assert.Equal(result2, 0.792313, 3);
+            Assert.Equal(0.792313, result2, 3);
         }
 
         [Fact]
@@ -95,11 +95,11 @@ namespace xUnitTestProject1
             var result1 = ni.Integrate(fun, DOP.Quadratic);
             var result2 = ni.Integrate(fun, DOP.Cubic);
 
-            Assert.Equal(result, 0.37099833686332434, 2);
+            Assert.Equal(0.37099833686332434, result, 2);
 
-            Assert.Equal(result1, 0.4406867935, 1);//****
+            Assert.Equal(0.4406867935, result1, 1);//****
 
-            Assert.Equal(result2, 0.419673273704, 3);
+            Assert.Equal(0.419673273704, result2, 3);
         }
 
         [Fact]
@@ -128,11 +128,11 @@ namespace xUnitTestProject1
             var result1 = ni.Integrate(fun, DOP.Quadratic);
             var result2 = ni.Integrate(fun, DOP.Cubic);
 
-            Assert.Equal(result, 0.1428577142, 3);
+            Assert.Equal(0.1428577142, result, 3);
 
-            Assert.Equal(result1, 0.1428577142, 4); 
+            Assert.Equal(0.1428577142, result1, 4); 
 
-            Assert.Equal(result2, 0.142852554690499, 3);
+            Assert.Equal(0.142852554690499, result2, 3);
         }
 
     }

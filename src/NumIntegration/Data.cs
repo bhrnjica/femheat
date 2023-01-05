@@ -40,7 +40,7 @@
     public readonly record struct Node(string id, double x, double y=0, double z=0);
     public readonly record struct FiniteElement(FEType ft, FEOrder fo, Node[] nodes);
     public readonly record struct GPoint(string id, double x, double y, double z);
-    public readonly record struct Point(double x, double y=0, double z=0);
+    public readonly record struct Point(double x, double y = 0, double z = 0);
 
     /// <summary>
     /// Helper class for Expression evaluator

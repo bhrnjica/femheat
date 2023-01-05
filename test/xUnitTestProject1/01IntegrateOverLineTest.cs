@@ -25,13 +25,13 @@ namespace xUnitTestProject1
             var ni = new Numeric(cd);
 
             var result1 = ni.Integrate(fun, DOP.Linear);
-            Assert.Equal(result1, 0.32175, 3);
+            Assert.Equal(0.32175, result1, 3);
 
             var result2 = ni.Integrate(fun, DOP.Quadratic);
-            Assert.Equal(result2, 0.32175, 3);
+            Assert.Equal(0.32175, result2, 3);
 
             var result3 = ni.Integrate(fun, DOP.Cubic);
-            Assert.Equal(result3, 0.32175, 3);
+            Assert.Equal(0.32175, result3, 3);
 
         }
 
@@ -58,13 +58,13 @@ namespace xUnitTestProject1
             //correct: 0.746824
 
             var result1 = ni.Integrate(fun, DOP.Linear);
-            Assert.Equal(result1, 0.746824, 3);
+            Assert.Equal(0.746824, result1, 3);
 
             var result2 = ni.Integrate(fun, DOP.Quadratic);
-            Assert.Equal(result2, 0.746824, 4);
+            Assert.Equal(0.746824, result2, 4);
 
             var result3 = ni.Integrate(fun, DOP.Cubic);
-            Assert.Equal(result3, 0.746824, 5);
+            Assert.Equal(0.746824, result3, 5);
 
         }
 
@@ -90,13 +90,13 @@ namespace xUnitTestProject1
             //correct: 2.0
 
             var result1 = ni.Integrate(fun, DOP.Linear);
-            Assert.Equal(result1, 1.9358195746511364, 3);
+            Assert.Equal(1.9358195746511364, result1, 3);
 
             var result2 = ni.Integrate(fun, DOP.Quadratic);
-            Assert.Equal(result2, 2.0013889136077441, 3);
+            Assert.Equal(2.0013889136077441, result2, 3);
 
             var result3 = ni.Integrate(fun, DOP.Cubic);
-            Assert.Equal(result3, 2.0, 4);
+            Assert.Equal(2.0, result3, 4);
 
         }
 

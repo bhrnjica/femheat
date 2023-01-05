@@ -36,9 +36,9 @@ namespace xUnitTestProject1
             var result1 = ni.Integrate(fun, DOP.Quadratic);
             var result2 = ni.Integrate(fun, DOP.Cubic);
 
-            Assert.Equal(result, 1063.125, 3);
-            Assert.Equal(result1, 1063.125, 5);
-            Assert.Equal(result2, 1063.125, 7);
+            Assert.Equal(1063.125, result, 3);
+            Assert.Equal(1063.125, result1, 5);
+            Assert.Equal(1063.125, result2, 7);
         }
 
         [Fact]
@@ -70,9 +70,9 @@ namespace xUnitTestProject1
             var result1 = ni.Integrate(fun, DOP.Quadratic);
             var result2 = ni.Integrate(fun, DOP.Cubic);
 
-            Assert.Equal(result, 609.1176125581478, 2);
-            Assert.Equal(result1, 609.1176125581478, 3);
-            Assert.Equal(result2, 609.1176125581478, 5);
+            Assert.Equal(609.1176125581478, result, 2);
+            Assert.Equal(609.1176125581478, result1, 3);
+            Assert.Equal(609.1176125581478, result2, 5);
         }
 
         [Fact]
@@ -104,9 +104,9 @@ namespace xUnitTestProject1
             var result1 = ni.Integrate(fun, DOP.Quadratic);
             var result2 = ni.Integrate(fun, DOP.Cubic);
 
-            Assert.Equal(result, 77.06811471928427, 1);
-            Assert.Equal(result1, 77.06811471928427, 3);
-            Assert.Equal(result2, 77.06811471928427, 5);
+            Assert.Equal(77.06811471928427, result, 1);
+            Assert.Equal(77.06811471928427, result1, 3);
+            Assert.Equal(77.06811471928427, result2, 5);
         }
 
         [Fact]
@@ -137,9 +137,9 @@ namespace xUnitTestProject1
             var result1 = ni.Integrate(fun, DOP.Quadratic);
             var result2 = ni.Integrate(fun, DOP.Cubic);
 
-            Assert.Equal(result, 11.757822939049598, 1);
-            Assert.Equal(result1, 45.04657880769588, 3);
-            Assert.Equal(result2, 38.727493885388569, 5);
+            Assert.Equal(11.757822939049598, result, 1);
+            Assert.Equal(45.04657880769588, result1, 3);
+            Assert.Equal(38.727493885388569, result2, 5);
         }
 
 
