@@ -1,19 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
 namespace NumIntegration
 {
     /// <summary>
-    /// class holds gauss values for one point
+    /// Pomoćna klasa za rješavanje sistema linearnih jednačina
+    /// Gaussovom eliminacijom s parcijalnim pivotiranjem.
     /// </summary>
-    public class Gaussians
+    public class Gaussian
     {
         public int n;
-        public double[] wi;
-        public GPoint[] gi;
+        public double[]? wi;
+        public GPoint[]? gi;
 
         static int  integralPoints(FEType ft, DOP dop)
         {
@@ -135,14 +130,14 @@ namespace NumIntegration
                 throw new NotSupportedException();
 
         }
-        public static Gaussians NullsAndWeights(FEType ft, DOP dop)
+        public static Gaussian NullsAndWeights(FEType ft, DOP dop)
         {
             var points = integralPoints(ft,dop);
             if (ft == FEType.Line)
             {
                 if (points == 1)
                 {
-                    var g1 = new Gaussians() 
+                    var g1 = new Gaussian() 
                     { 
                         n = points, 
                         gi = new GPoint[1] 
@@ -154,7 +149,7 @@ namespace NumIntegration
                 }
                 else if (points == 2)
                 {
-                    var g2 = new Gaussians() 
+                    var g2 = new Gaussian() 
                     { 
                         n = points, 
                         gi = new GPoint[2] { new GPoint("1", -0.577350269189626, 0, 0), 
@@ -164,7 +159,7 @@ namespace NumIntegration
                 }
                 else if (points == 3)
                 {
-                    var g3 = new Gaussians()
+                    var g3 = new Gaussian()
                     {
                         n = points,
                         gi = new GPoint[3] { new GPoint("1", -0.774596669241483, 0, 0), 
@@ -177,7 +172,7 @@ namespace NumIntegration
                 }
                 else if (points == 4)
                 {
-                    var g4 = new Gaussians()
+                    var g4 = new Gaussian()
                     {
                         n = points,
                         gi = new GPoint[4] 
@@ -195,7 +190,7 @@ namespace NumIntegration
                 }
                 else if (points == 5)
                 {
-                    var g5 = new Gaussians()
+                    var g5 = new Gaussian()
                     {
                         n = points,
                         gi = new GPoint[5]
@@ -222,7 +217,7 @@ namespace NumIntegration
             {
                 if (points == 1)
                 {
-                    var g21 = new Gaussians() 
+                    var g21 = new Gaussian() 
                                 { n = points, 
                                  gi = new GPoint[1] 
                                     { new GPoint("1", 1 / 3, 0, 0) }, 
@@ -231,7 +226,7 @@ namespace NumIntegration
                 }
                 else if (points == 3)
                 {
-                    var g = new Gaussians()
+                    var g = new Gaussian()
                     {
                         n = points,
                         gi = new GPoint[3] { new GPoint("1", 0.16666666666667,0.16666666666667,0), 
@@ -246,7 +241,7 @@ namespace NumIntegration
 
                 //else if (points == 6)
                 //{
-                //    var g = new Gaussians()
+                //    var g = new Gaussian()
                 //    {
                 //        n = points,
                 //        gi = new GPoint[6]{new GPoint("1",  0.09157621350977,  0.09157621350977, 0),
@@ -262,7 +257,7 @@ namespace NumIntegration
                 //}
                 else if (points == 7)
                 {
-                    var g = new Gaussians()
+                    var g = new Gaussian()
                     {
                         n = points,
                         gi = new GPoint[7]{ new GPoint("1",0.1012865073235,0.1012865073235,0),
@@ -279,7 +274,7 @@ namespace NumIntegration
                 }
                 else if (points == 13)
                 {
-                    var g = new Gaussians()
+                    var g = new Gaussian()
                     {
                         n = points,
                         gi = new GPoint[13]{ new GPoint("1", 0.0651301029022, 0.0651301029022, 0),
@@ -309,12 +304,12 @@ namespace NumIntegration
             {
                 if (points == 1)
                 {
-                    var g21 = new Gaussians() { n = points, gi = new GPoint[1] { new GPoint("1", 0, 0, 0) }, wi = new double[1] { 2 } };
+                    var g21 = new Gaussian() { n = points, gi = new GPoint[1] { new GPoint("1", 0, 0, 0) }, wi = new double[1] { 2 } };
                     return g21;
                 }
                 else if (points == 4)
                 {
-                    var g = new Gaussians()
+                    var g = new Gaussian()
                     {
                         n = points,
                         gi = new GPoint[4] {new GPoint("1",-0.577350269189626,-0.577350269189626, 0),
@@ -329,7 +324,7 @@ namespace NumIntegration
                 }
                 else if (points == 9)
                 {
-                    var g = new Gaussians()
+                    var g = new Gaussian()
                     {
                         n = points,
                         gi = new GPoint[9]{ new GPoint("1",-0.774596669241483,-0.774596669241483,0.000000000000000),
@@ -356,7 +351,7 @@ namespace NumIntegration
                 }
                 else if (points == 16)
                 {
-                    var g = new Gaussians()
+                    var g = new Gaussian()
                     {
                         n = points,
                         gi = new GPoint[16]{ new GPoint("1", -0.8611363115940526,-0.8611363115940526,0),
@@ -408,12 +403,12 @@ namespace NumIntegration
             {
                 if (points == 1)
                 {
-                    var g21 = new Gaussians() { n = points, gi = new GPoint[1] { new GPoint("1", 0.25, 0.25, 0.25) }, wi = new double[1] { 1 } };
+                    var g21 = new Gaussian() { n = points, gi = new GPoint[1] { new GPoint("1", 0.25, 0.25, 0.25) }, wi = new double[1] { 1 } };
                     return g21;
                 }
                 else if (points == 4)
                 {
-                    var g = new Gaussians()
+                    var g = new Gaussian()
                     {
                         n = points,
                         gi = new GPoint[4] { new GPoint("1", 0.5854101966249680,0.1381966011250110,0.1381966011250110),
@@ -428,7 +423,7 @@ namespace NumIntegration
 
                 else if (points == 10)
                 {
-                    var g = new Gaussians()
+                    var g = new Gaussian()
                     {
                         n = points,
                         gi = new GPoint[10] {new GPoint("1", 0.7784952948213300,0.0738349017262234,0.0738349017262234),
@@ -451,7 +446,7 @@ namespace NumIntegration
                 }
                 else if (points == 20)
                 {
-                    var g = new Gaussians()
+                    var g = new Gaussian()
                     {
                         n = points,
                         gi = new GPoint[20] {new GPoint("1", 0.9029422158182680,0.0323525947272439,0.0323525947272439),
@@ -491,13 +486,13 @@ namespace NumIntegration
             {
                 if (points == 1)
                 {
-                    var g21 = new Gaussians() { n = points, gi = new GPoint[1] { new GPoint("1", 0, 0, 0) }, wi = new double[1] { 8.0 } };
+                    var g21 = new Gaussian() { n = points, gi = new GPoint[1] { new GPoint("1", 0, 0, 0) }, wi = new double[1] { 8.0 } };
                     return g21;
                 }
                 else if (points == 8)
                 {
 
-                    var g = new Gaussians()
+                    var g = new Gaussian()
                     {
                         n = points,
                         gi = new GPoint[8] { new GPoint("1",-0.5773502692,-0.5773502692,-0.5773502692),
@@ -517,7 +512,7 @@ namespace NumIntegration
                 else if (points == 27)
                 {
 
-                    var g = new Gaussians()
+                    var g = new Gaussian()
                     {
                         n = points,
                         gi = new GPoint[27] { new GPoint("1", -0.774596669241483, -0.774596669241483 , -0.774596669241483  ),
@@ -563,7 +558,7 @@ namespace NumIntegration
                 else if (points == 64)
                 {
 
-                    var g = new Gaussians()
+                    var g = new Gaussian()
                     {
                         n = points,
                         gi = new GPoint[64] { new GPoint("1", -0.86113631159405257522, -0.86113631159405257522, -0.86113631159405257522),
@@ -653,6 +648,75 @@ namespace NumIntegration
             else
                 throw new NotSupportedException();
         }
+    
+        /// <summary>
+        /// Rješava sistem [A]{x} = {b} dimenzije n×n.
+        /// </summary>
+        /// <param name="A">Matrica koeficijenata n×n</param>
+        /// <param name="b">Vektor desne strane dužine n</param>
+        /// <param name="n">Dimenzija sistema</param>
+        /// <returns>Vektor rješenja {x}</returns>
+        public static double[] Solve(double[,] A, double[] b, int n)
+        {
+            // Kopija matrice i vektora da ne mijenjamo originale
+            double[,] a = new double[n, n];
+            double[] x = new double[n];
+            for (int i = 0; i < n; i++)
+            {
+                for (int j = 0; j < n; j++)
+                    a[i, j] = A[i, j];
+                x[i] = b[i];
+            }
+
+            // Eliminacija unaprijed (forward elimination)
+            for (int k = 0; k < n - 1; k++)
+            {
+                // Parcijalno pivotiranje
+                int maxRow = k;
+                double maxVal = Math.Abs(a[k, k]);
+                for (int i = k + 1; i < n; i++)
+                {
+                    if (Math.Abs(a[i, k]) > maxVal)
+                    {
+                        maxVal = Math.Abs(a[i, k]);
+                        maxRow = i;
+                    }
+                }
+
+                if (maxRow != k)
+                {
+                    for (int j = k; j < n; j++)
+                    {
+                        double temp = a[k, j];
+                        a[k, j] = a[maxRow, j];
+                        a[maxRow, j] = temp;
+                    }
+                    (x[k], x[maxRow]) = (x[maxRow], x[k]);
+                }
+
+                if (Math.Abs(a[k, k]) < 1e-12)
+                    throw new InvalidOperationException(
+                        $"Matrica je singularna! Nulti pivot na poziciji ({k},{k}).");
+
+                for (int i = k + 1; i < n; i++)
+                {
+                    double factor = a[i, k] / a[k, k];
+                    for (int j = k; j < n; j++)
+                        a[i, j] -= factor * a[k, j];
+                    x[i] -= factor * x[k];
+                }
+            }
+
+            // Unazadna supstitucija (back substitution)
+            for (int i = n - 1; i >= 0; i--)
+            {
+                double sum = 0;
+                for (int j = i + 1; j < n; j++)
+                    sum += a[i, j] * x[j];
+                x[i] = (x[i] - sum) / a[i, i];
+            }
+
+            return x;
+        }
     }
 }
-  

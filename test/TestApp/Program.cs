@@ -1,5 +1,5 @@
 ﻿using Book;
 using NumIntegration;
 
-Chapter4.Example_466();
+Chapter5.Zadatak_05_02();
 return;

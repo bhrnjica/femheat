@@ -6,9 +6,9 @@ namespace NumIntegration
 {
     public class Numeric
     {
-        private Register register = null;
-        private ExpressionContext context = null;
-        private IGenericExpression<double> function = null;
+        private Register register;
+        private ExpressionContext context;
+        private IGenericExpression<double>? function = null;
 
         readonly FiniteElement _domain;
 
@@ -26,9 +26,13 @@ namespace NumIntegration
         {
             try
             {
-                function = context.CompileGeneric<double>(strExpression);
+                function = context?.CompileGeneric<double>(strExpression);
 
-                Gaussians gv = Gaussians.NullsAndWeights(_domain.ft, degreeofPrecision);
+                var gv = Gaussian.NullsAndWeights(_domain.ft, degreeofPrecision);
+                
+                if(gv is null || gv.gi is null || 
+                    gv.gi.Length == 0 || gv.wi is null 
+                    || gv.wi.Length == 0) throw new NullReferenceException(nameof(gv));
 
                 var jac = new Jacobian(_domain.ft, _domain.fo);
                 var coord = new Coordinates(_domain.ft, _domain.fo);
@@ -58,7 +62,7 @@ namespace NumIntegration
                 return result;
 
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 
                throw;

@@ -15,7 +15,7 @@ namespace NumIntegration
         {
             _ft = ft;   
             _fo = fo;   
-            _shapeDerivatives = getShapeDerivatives();
+            _shapeDerivatives = getShapeDerivatives()?? throw new NullReferenceException(nameof(_shapeDerivatives));
         }
 
     public double Calculate(Node[] nodes, Point pt)
@@ -205,7 +205,7 @@ namespace NumIntegration
 
         }
 
-        internal List<Func<Point, double>> getShapeDerivatives()
+        internal List<Func<Point, double>>? getShapeDerivatives()
         {
             var shape = new List<Func<Point, double>>();
 

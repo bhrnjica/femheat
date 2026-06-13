@@ -8,7 +8,7 @@ namespace NumIntegration
 {
     public class Coordinates
     {
-        readonly List<Func<Point, double>> _shapeFunctions;
+        readonly List<Func<Point, double>>? _shapeFunctions;
         readonly FEType _ft;
         readonly FEOrder _fo;
 
@@ -22,7 +22,9 @@ namespace NumIntegration
         {
             //get appropriate Shape functions
             var shape = _shapeFunctions;
-
+            if(shape is null)
+                throw new NullReferenceException(nameof(shape));
+                
             (double x, double y, double z) = (0, 0, 0);
 
             if (_ft == FEType.Line)
@@ -62,7 +64,7 @@ namespace NumIntegration
             return new Point(x, y, z);
         }
 
-        internal List<Func<Point, double>> getShapeFunctions()
+        internal List<Func<Point, double>>? getShapeFunctions()
         {
             var shape = new List<Func<Point, double>>();
 
