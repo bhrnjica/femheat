@@ -1,4 +1,6 @@
-﻿using Ciloci.Flee;
+﻿
+
+using Flee.PublicTypes;
 
 namespace NumIntegration
 {
@@ -9,7 +11,6 @@ namespace NumIntegration
         private IGenericExpression<double> function = null;
 
         readonly FiniteElement _domain;
-        readonly string _strExpr;
 
         public Numeric(FiniteElement domain)
         {

@@ -1,0 +1,41 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <AssemblyName>Flee</AssemblyName>
+        <AssemblyTitle>Flee</AssemblyTitle>
+        <Description>Flee is Fast Lightweight Expression Evaluator.</Description>
+        <Copyright>Copyright © 2022 Flee Contributors</Copyright>
+        <Authors>Flee Contributors</Authors>
+        <Company>Flee</Company>
+        <Product>Flee</Product>
+        <TargetFrameworks>net10.0;net9.0;net8.0;net7.0;net6.0;net5.0;netstandard2.1;netstandard2.0</TargetFrameworks>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <Nullable>enable</Nullable>
+        <LangVersion>latest</LangVersion>
+        <NoWarn>$(NoWarn);NU1510;CS8600;CS8601;CS8602;CS8603;CS8604;CS8605;CS8610;CS8618;CS8620;CS8622;CS8625;CS8764;CS8765;CS8767;CS8769;CS0168;CS0618;CS0672;SYSLIB0051</NoWarn>
+        <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+        <PackageVersion>2.0.0</PackageVersion>
+        <Title>Flee</Title>
+        <PackageProjectUrl>https://github.com/mparlak/Flee</PackageProjectUrl>
+        <PackageLicenseExpression>MIT</PackageLicenseExpression>
+        <RepositoryUrl>https://github.com/mparlak/Flee</RepositoryUrl>
+        <PackageTags>flee,expression evaluator,Expression Evaluator for c#</PackageTags>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <None Remove="Resources\DocComments.xml" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <Content Include="Resources\DocComments.xml" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <PackageReference Include="System.ComponentModel" Version="4.3.0" Condition="'$(TargetFramework)' == 'netstandard2.0' Or '$(TargetFramework)' == 'netstandard2.1'" />
+        <PackageReference Include="System.Reflection" Version="4.3.0" Condition="'$(TargetFramework)' == 'netstandard2.0' Or '$(TargetFramework)' == 'netstandard2.1'" />
+        <PackageReference Include="System.Reflection.Emit" Version="4.7.0" Condition="'$(TargetFramework)' == 'netstandard2.0' Or '$(TargetFramework)' == 'netstandard2.1'" />
+        <PackageReference Include="System.Reflection.Emit.ILGeneration" Version="4.7.0" Condition="'$(TargetFramework)' == 'netstandard2.0' Or '$(TargetFramework)' == 'netstandard2.1'" />
+        <PackageReference Include="System.Reflection.Emit.Lightweight" Version="4.7.0" Condition="'$(TargetFramework)' == 'netstandard2.0' Or '$(TargetFramework)' == 'netstandard2.1'" />
+    </ItemGroup>
+
+</Project>
