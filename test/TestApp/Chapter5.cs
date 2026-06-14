@@ -197,5 +197,129 @@ namespace Book
             Console.WriteLine("\n=== Kraj zadatka 5.02 ===");
         }
 
+        // ====================================================================
+        // Zadatak 5.05: Ravni zid sa unutrašnjim izvorom toplote — FEM rješenje
+        // Određivanje raspodjele temperature u ravnom zidu debljine 60 mm
+        // s unutrašnjom generacijom toplote q_dot=0.3 MW/m³ i λ=21 W/(m·°C).
+        // Temperatura površine zida: ϑ_s=40 °C. Diskretizacija: 4 KE.
+        // ====================================================================
+        public static void Zadatak_05_05()
+        {
+            Console.WriteLine("=== Zadatak 5.05: Ravni zid sa unutrašnjim izvorom ===");
+            Console.WriteLine("MKE rješenje s 4 linearna KE\n");
+
+            // ---------- 1. Fizički parametri ----------
+            double lambda = 21.0;       // W/(m·°C)
+            double qDot   = 0.3e6;      // W/m³  (0.3 MW/m³)
+            double L      = 0.060;      // m     (60 mm)
+            double thetaS = 40.0;       // °C
+            double A      = 1.0;        // m²
+            int    nElem  = 4;          // broj KE
+
+            double le = L / nElem;      // dužina jednog elementa
+            double ke = lambda * A / le; // koeficijent kondukcije elementa
+
+            // ---------- 2. Parametri sistema ----------
+            int nNodes = nElem + 1;  // broj čvorova (5)
+            double[,] K = new double[nNodes, nNodes];
+            double[]  F = new double[nNodes];
+
+            // ---------- 3. Sklapanje globalnog sistema ----------
+            for (int e = 0; e < nElem; e++)
+            {
+                // Lokalni vektor opterećenja (konzistentan)
+                double fe = qDot * A * le / 2.0;
+
+                // Lokalna matrica krutosti
+                K[e, e]       += ke;
+                K[e, e + 1]   -= ke;
+                K[e + 1, e]   -= ke;
+                K[e + 1, e + 1] += ke;
+
+                // Lokalni vektor opterećenja
+                F[e]     += fe;
+                F[e + 1] += fe;
+            }
+
+            Console.WriteLine("--- Globalni sistem [K]{ϑ} = {F} (prije G.U.) ---");
+            Console.WriteLine("Matrica krutosti [K]:");
+            for (int i = 0; i < nNodes; i++)
+            {
+                Console.Write("  [ ");
+                for (int j = 0; j < nNodes; j++)
+                    Console.Write($"{K[i, j],8:F1} ");
+                Console.WriteLine("]");
+            }
+            Console.Write("\nVektor opterećenja {F}: { ");
+            for (int i = 0; i < nNodes; i++)
+                Console.Write($"{F[i],8:F1} ");
+            Console.WriteLine("}\n");
+
+            // ---------- 4. Granični uvjeti (Dirichlet) ----------
+            // ϑ₁ = ϑ₅ = ϑ_s
+            K[0, 0] = 1; K[0, 1] = 0;
+            F[0] = thetaS;
+
+            K[nNodes - 1, nNodes - 1] = 1;
+            K[nNodes - 1, nNodes - 2] = 0;
+            F[nNodes - 1] = thetaS;
+
+            Console.WriteLine("--- Globalni sistem [K]{ϑ} = {F} (nakon G.U.) ---");
+            Console.WriteLine("Matrica krutosti [K]:");
+            for (int i = 0; i < nNodes; i++)
+            {
+                Console.Write("  [ ");
+                for (int j = 0; j < nNodes; j++)
+                    Console.Write($"{K[i, j],8:F1} ");
+                Console.WriteLine("]");
+            }
+            Console.Write("\nVektor opterećenja {F}: { ");
+            for (int i = 0; i < nNodes; i++)
+                Console.Write($"{F[i],8:F1} ");
+            Console.WriteLine("}\n");
+
+            // ---------- 5. Rješavanje sistema ----------
+            double[] theta = Gaussian.Solve(K, F, nNodes);
+
+            Console.WriteLine("--- Rezultati ---");
+            string[] posLabels = { "x=0 (lijeva površina)",
+                                   "x=15 mm",
+                                   "x=30 mm (sredina)",
+                                   "x=45 mm",
+                                   "x=60 mm (desna površina)" };
+            for (int i = 0; i < nNodes; i++)
+                Console.WriteLine($"  ϑ{i + 1} = {theta[i]:F2} °C  ({posLabels[i]})");
+
+            // ---------- 6. Analitičko rješenje ----------
+            Console.WriteLine("\n--- Usporedba s analitičkim rješenjem ---");
+            double[] xPos = { 0, 0.015, 0.030, 0.045, 0.060 };
+            Console.WriteLine("  Čvor |   x (mm)  |   FEM (°C)  |  Analit. (°C) |  Razlika");
+            Console.WriteLine("  -----|-----------|-------------|---------------|---------");
+            for (int i = 0; i < nNodes; i++)
+            {
+                double x = xPos[i];
+                double thetaExact = thetaS
+                    + (qDot * L * L) / (2 * lambda) * (x / L - x * x / (L * L));
+                double diff = Math.Abs(theta[i] - thetaExact);
+                Console.WriteLine($"  {i + 1,4} |"
+                    + $"  {x * 1000,6:F1}  |"
+                    + $"  {theta[i],9:F3}  |"
+                    + $"  {thetaExact,11:F3}  |"
+                    + $"  {diff,7:F4}");
+            }
+
+            // ---------- 7. Fizička interpretacija ----------
+            Console.WriteLine("\n--- Fizička interpretacija ---");
+            double deltaTmax = theta[2] - thetaS;
+            Console.WriteLine($"  Maksimalna temperatura: ϑ_max = {theta[2]:F2} °C "
+                + $"(na sredini zida, x=30 mm)");
+            Console.WriteLine($"  Porast temperature: Δϑ = {deltaTmax:F2} °C "
+                + $"(od površine do sredine)");
+            Console.WriteLine($"  Generisana toplota: q̇ = {qDot / 1e6:F1} MW/m³ "
+                + $"→ ukupno {qDot * L * A / 1000:F1} kW/m²");
+
+            Console.WriteLine("\n=== Kraj zadatka 5.05 ===");
+        }
+
     }
 }
