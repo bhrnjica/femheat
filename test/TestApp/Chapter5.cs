@@ -202,11 +202,12 @@ namespace Book
         // Određivanje raspodjele temperature u ravnom zidu debljine 60 mm
         // s unutrašnjom generacijom toplote q_dot=0.3 MW/m³ i λ=21 W/(m·°C).
         // Temperatura površine zida: ϑ_s=40 °C. Diskretizacija: 4 KE.
+        // Korišten Mesh1D sa HeatSource za automatsko sklapanje sistema.
         // ====================================================================
         public static void Zadatak_05_05()
         {
             Console.WriteLine("=== Zadatak 5.05: Ravni zid sa unutrašnjim izvorom ===");
-            Console.WriteLine("MKE rješenje s 4 linearna KE\n");
+            Console.WriteLine("MKE rješenje s 4 linearna KE (Mesh1D + HeatSource)\n");
 
             // ---------- 1. Fizički parametri ----------
             double lambda = 21.0;       // W/(m·°C)
@@ -217,41 +218,46 @@ namespace Book
             int    nElem  = 4;          // broj KE
 
             double le = L / nElem;      // dužina jednog elementa
-            double ke = lambda * A / le; // koeficijent kondukcije elementa
 
-            // ---------- 2. Parametri sistema ----------
-            int nNodes = nElem + 1;  // broj čvorova (5)
-            double[,] K = new double[nNodes, nNodes];
-            double[]  F = new double[nNodes];
-
-            // ---------- 3. Sklapanje globalnog sistema ----------
+            // ---------- 2. Definicija konačnih elemenata ----------
+            var elements = new FiniteElement[nElem];
             for (int e = 0; e < nElem; e++)
             {
-                // Lokalni vektor opterećenja (konzistentan)
-                double fe = qDot * A * le / 2.0;
-
-                // Lokalna matrica krutosti
-                K[e, e]       += ke;
-                K[e, e + 1]   -= ke;
-                K[e + 1, e]   -= ke;
-                K[e + 1, e + 1] += ke;
-
-                // Lokalni vektor opterećenja
-                F[e]     += fe;
-                F[e + 1] += fe;
+                elements[e] = new FiniteElement()
+                {
+                    nodes = new[]
+                    {
+                        new Node($"{e+1}", e * le),
+                        new Node($"{e+2}", (e + 1) * le),
+                    },
+                    ft = FEType.Line,
+                    fo = FEOrder.Linear,
+                };
             }
 
+            // ---------- 3. Formiranje mreže (Mesh1D sa izvorom toplote) ----------
+            var mesh = new Mesh1D(elements,
+                                  Enumerable.Repeat(lambda, nElem).ToArray(),
+                                  Enumerable.Repeat(A, nElem).ToArray())
+            {
+                HeatSource = qDot   // unutrašnji izvor toplote G [W/m³]
+            };
+
+            var (K, F) = mesh.Assemble();
+            int n = mesh.NodeCount;
+
             Console.WriteLine("--- Globalni sistem [K]{ϑ} = {F} (prije G.U.) ---");
+            Console.WriteLine($"Broj elemenata: {mesh.ElementCount}, broj čvorova: {n}");
             Console.WriteLine("Matrica krutosti [K]:");
-            for (int i = 0; i < nNodes; i++)
+            for (int i = 0; i < n; i++)
             {
                 Console.Write("  [ ");
-                for (int j = 0; j < nNodes; j++)
+                for (int j = 0; j < n; j++)
                     Console.Write($"{K[i, j],8:F1} ");
                 Console.WriteLine("]");
             }
             Console.Write("\nVektor opterećenja {F}: { ");
-            for (int i = 0; i < nNodes; i++)
+            for (int i = 0; i < n; i++)
                 Console.Write($"{F[i],8:F1} ");
             Console.WriteLine("}\n");
 
@@ -260,26 +266,26 @@ namespace Book
             K[0, 0] = 1; K[0, 1] = 0;
             F[0] = thetaS;
 
-            K[nNodes - 1, nNodes - 1] = 1;
-            K[nNodes - 1, nNodes - 2] = 0;
-            F[nNodes - 1] = thetaS;
+            K[n - 1, n - 1] = 1;
+            K[n - 1, n - 2] = 0;
+            F[n - 1] = thetaS;
 
             Console.WriteLine("--- Globalni sistem [K]{ϑ} = {F} (nakon G.U.) ---");
             Console.WriteLine("Matrica krutosti [K]:");
-            for (int i = 0; i < nNodes; i++)
+            for (int i = 0; i < n; i++)
             {
                 Console.Write("  [ ");
-                for (int j = 0; j < nNodes; j++)
+                for (int j = 0; j < n; j++)
                     Console.Write($"{K[i, j],8:F1} ");
                 Console.WriteLine("]");
             }
             Console.Write("\nVektor opterećenja {F}: { ");
-            for (int i = 0; i < nNodes; i++)
+            for (int i = 0; i < n; i++)
                 Console.Write($"{F[i],8:F1} ");
             Console.WriteLine("}\n");
 
             // ---------- 5. Rješavanje sistema ----------
-            double[] theta = Gaussian.Solve(K, F, nNodes);
+            double[] theta = Gaussian.Solve(K, F, n);
 
             Console.WriteLine("--- Rezultati ---");
             string[] posLabels = { "x=0 (lijeva površina)",
@@ -287,7 +293,7 @@ namespace Book
                                    "x=30 mm (sredina)",
                                    "x=45 mm",
                                    "x=60 mm (desna površina)" };
-            for (int i = 0; i < nNodes; i++)
+            for (int i = 0; i < n; i++)
                 Console.WriteLine($"  ϑ{i + 1} = {theta[i]:F2} °C  ({posLabels[i]})");
 
             // ---------- 6. Analitičko rješenje ----------
@@ -295,7 +301,7 @@ namespace Book
             double[] xPos = { 0, 0.015, 0.030, 0.045, 0.060 };
             Console.WriteLine("  Čvor |   x (mm)  |   FEM (°C)  |  Analit. (°C) |  Razlika");
             Console.WriteLine("  -----|-----------|-------------|---------------|---------");
-            for (int i = 0; i < nNodes; i++)
+            for (int i = 0; i < n; i++)
             {
                 double x = xPos[i];
                 double thetaExact = thetaS
@@ -319,6 +325,160 @@ namespace Book
                 + $"→ ukupno {qDot * L * A / 1000:F1} kW/m²");
 
             Console.WriteLine("\n=== Kraj zadatka 5.05 ===");
+        }
+
+        // ====================================================================
+        // Zadatak 5.07: Cilindrična izolacija cijevi — dva sloja
+        // (staklena vuna + gipsani malter). Radijalni prenos toplote sa
+        // dva linijska KE korištenjem Mesh1D klase sa Geometry=Cylindrical.
+        // Unutrašnja površina na 92 °C (vrelo ulje), spoljašnja površina
+        // izložena konvekciji (α=15 W/(m²·°C), ϑ_∞=15 °C).
+        // Odrediti temperature na spoju slojeva i na spoljašnjoj površini.
+        // ====================================================================
+        public static void Zadatak_05_07()
+        {
+            Console.WriteLine("=== Zadatak 5.07: Cilindrična izolacija ===");
+            Console.WriteLine("MKE rješenje s 2 linearna KE (radijalni prenos)\n");
+
+            // ---------- 1. Fizički parametri ----------
+            double lambda1 = 0.04;   // W/(m·°C) — staklena vuna
+            double lambda2 = 0.06;   // W/(m·°C) — gipsani malter
+
+            double r1 = 0.05;  // m — unutrašnja površina cijevi (d=10 cm)
+            double r2 = 0.06;  // m — spoj vuna–malter (+1 cm)
+            double r3 = 0.07;  // m — spoljašnja površina (+1 cm)
+            double L  = 1.0;   // m — jedinična dužina cijevi
+
+            double alpha     = 15.0;   // W/(m²·°C) — koef. konvekcije
+            double theta_u   = 92.0;   // °C — temperatura ulja (unutrašnja)
+            double theta_inf = 15.0;   // °C — temperatura okoline
+
+            // ---------- 2. Definicija konačnih elemenata ----------
+            // Kod cilindričnog zida, koordinate čvorova su radijusi r
+            var fe1 = new FiniteElement()
+            {
+                nodes = new[]
+                {
+                    new Node("1", r1),  // unutrašnja površina cijevi
+                    new Node("2", r2),  // spoj staklena vuna — gipsani malter
+                },
+                ft = FEType.Line,
+                fo = FEOrder.Linear,
+            };
+
+            var fe2 = new FiniteElement()
+            {
+                nodes = new[]
+                {
+                    new Node("1", r2),  // spoj (lokalni čvor 1)
+                    new Node("2", r3),  // spoljašnja površina
+                },
+                ft = FEType.Line,
+                fo = FEOrder.Linear,
+            };
+
+            // ---------- 3. Formiranje mreže (cilindrična geometrija) ----------
+            // Mesh1D sa Geometry=Cylindrical automatski računa:
+            //   • k_e = 2πL λ_e r̄_e / l_e  (kondukcija sa srednjim radijusom)
+            //   • Granice: unutrašnja površina 2πr₁L, spoljašnja 2πr₃L
+            // Površine u konstruktoru su proizvoljne za cilindrični slučaj
+            // (koriste se samo za PlaneWall geometriju).
+            var mesh = new Mesh1D([fe1, fe2],
+                                  [lambda1, lambda2],
+                                  [0.0, 0.0])  // ne koristi se za Cylindrical
+            {
+                Geometry = GeometryType.Cylindrical,
+                CylinderLength = L,
+                LeftHeatFlux = 0,           // nema toplotnog toka (Dirichlet)
+                RightConvectionCoeff = alpha,
+                RightAmbientTemp = theta_inf
+            };
+
+            var (K, F) = mesh.Assemble();
+            int n = mesh.NodeCount;
+
+            // ---------- 4. Koeficijenti (informativno) ----------
+            double l1 = r2 - r1;
+            double l2 = r3 - r2;
+            double rBar1 = (r1 + r2) / 2.0;
+            double rBar2 = (r2 + r3) / 2.0;
+            double k1 = 2 * Math.PI * L * lambda1 * rBar1 / l1;
+            double k2 = 2 * Math.PI * L * lambda2 * rBar2 / l2;
+            double kAlpha = alpha * 2 * Math.PI * r3 * L;
+
+            Console.WriteLine("--- Koeficijenti kondukcije (cilindrični prenos) ---");
+            Console.WriteLine($"  KE 1 (staklena vuna):  l₁={l1:F3} m, "
+                + $"r̄₁={rBar1:F3} m → k₁={k1:F4} W/°C");
+            Console.WriteLine($"  KE 2 (gipsani malter): l₂={l2:F3} m, "
+                + $"r̄₂={rBar2:F3} m → k₂={k2:F4} W/°C");
+            Console.WriteLine($"  Konvekcija (r=r₃):     "
+                + $"α·2πr₃L = {kAlpha:F4} W/°C\n");
+
+            Console.WriteLine("--- Globalni sistem [K]{ϑ} = {F} (prije G.U.) ---");
+            Console.WriteLine($"Broj elemenata: {mesh.ElementCount}, broj čvorova: {n}");
+            Console.WriteLine("Matrica krutosti [K]:");
+            for (int i = 0; i < n; i++)
+            {
+                Console.Write("  [ ");
+                for (int j = 0; j < n; j++)
+                    Console.Write($"{K[i, j],10:F4} ");
+                Console.WriteLine("]");
+            }
+            Console.Write($"\nVektor opterećenja {{F}}: "
+                + $"{{ {F[0],8:F2}, {F[1],8:F2}, {F[2],8:F2} }}\n\n");
+
+            // ---------- 5. Granični uvjet (Dirichlet) ----------
+            // ϑ₁ = ϑ_u = 92 °C
+            K[0, 0] = 1; K[0, 1] = 0; K[0, 2] = 0;
+            F[0] = theta_u;
+
+            Console.WriteLine("--- Globalni sistem [K]{ϑ} = {F} (nakon G.U.) ---");
+            Console.WriteLine("Matrica krutosti [K]:");
+            for (int i = 0; i < n; i++)
+            {
+                Console.Write("  [ ");
+                for (int j = 0; j < n; j++)
+                    Console.Write($"{K[i, j],10:F4} ");
+                Console.WriteLine("]");
+            }
+            Console.Write($"\nVektor opterećenja {{F}}: "
+                + $"{{ {F[0],8:F2}, {F[1],8:F2}, {F[2],8:F2} }}\n\n");
+
+            // ---------- 6. Rješavanje sistema ----------
+            double[] theta = Gaussian.Solve(K, F, n);
+
+            Console.WriteLine("--- Rezultati ---");
+            Console.WriteLine($"  ϑ₁ = {theta[0]:F2} °C  "
+                + $"(r={r1*1000:F0} mm, unutrašnja površina — vrelo ulje)");
+            Console.WriteLine($"  ϑ₂ = {theta[1]:F2} °C  "
+                + $"(r={r2*1000:F0} mm, spoj staklena vuna–gipsani malter)");
+            Console.WriteLine($"  ϑ₃ = {theta[2]:F2} °C  "
+                + $"(r={r3*1000:F0} mm, spoljašnja površina)\n");
+
+            // ---------- 7. Toplotni tok i bilans ----------
+            double Q = k1 * (theta[0] - theta[1]);
+            Console.WriteLine("--- Toplotni tok ---");
+            Console.WriteLine($"  Q = k₁·(ϑ₁−ϑ₂) = {k1:F4}·({theta[0]:F2}−{theta[1]:F2})"
+                + $" = {Q:F2} W  (po metru dužine cijevi)");
+            Console.WriteLine($"  Provjera preko KE 2: "
+                + $"k₂·(ϑ₂−ϑ₃) = {k2:F4}·({theta[1]:F2}−{theta[2]:F2})"
+                + $" = {k2*(theta[1]-theta[2]):F2} W ✓\n");
+
+            // ---------- 8. Fizička interpretacija ----------
+            Console.WriteLine("--- Fizička interpretacija ---");
+            double deltaT1 = theta[0] - theta[1];
+            double deltaT2 = theta[1] - theta[2];
+            Console.WriteLine($"  Pad u staklenoj vuni:  "
+                + $"Δϑ₁ = {deltaT1:F2} °C "
+                + $"(veći pad — niža provodnost λ₁={lambda1})");
+            Console.WriteLine($"  Pad u gipsanom malteru: "
+                + $"Δϑ₂ = {deltaT2:F2} °C "
+                + $"(manji pad — viša provodnost λ₂={lambda2})");
+            Console.WriteLine($"  Spoljašnja temperatura zida ({theta[2]:F2} °C) "
+                + $"je za {theta[2]-theta_inf:F1} °C viša od okoline "
+                + $"(konvektivni otpor na granici)");
+
+            Console.WriteLine("\n=== Kraj zadatka 5.07 ===");
         }
 
     }
