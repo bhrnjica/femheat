@@ -318,7 +318,43 @@ namespace NumIntegration
                     shape.Add(ShapeDerivatives.p1NHL4);
                     shape.Add(ShapeDerivatives.p2NHL4);
                     shape.Add(ShapeDerivatives.p3NHL4);
-
+                }
+                if (_ft == FEType.Tetrahedron && _fo == FEOrder.Quadratic)
+                {
+                    shape.Add(ShapeDerivatives.p1NHQ1);
+                    shape.Add(ShapeDerivatives.p2NHQ1);
+                    shape.Add(ShapeDerivatives.p3NHQ1);
+                    shape.Add(ShapeDerivatives.p1NHQ2);
+                    shape.Add(ShapeDerivatives.p2NHQ2);
+                    shape.Add(ShapeDerivatives.p3NHQ2);
+                    shape.Add(ShapeDerivatives.p1NHQ3);
+                    shape.Add(ShapeDerivatives.p2NHQ3);
+                    shape.Add(ShapeDerivatives.p3NHQ3);
+                    shape.Add(ShapeDerivatives.p1NHQ4);
+                    shape.Add(ShapeDerivatives.p2NHQ4);
+                    shape.Add(ShapeDerivatives.p3NHQ4);
+                    shape.Add(ShapeDerivatives.p1NHQ5);
+                    shape.Add(ShapeDerivatives.p2NHQ5);
+                    shape.Add(ShapeDerivatives.p3NHQ5);
+                    shape.Add(ShapeDerivatives.p1NHQ6);
+                    shape.Add(ShapeDerivatives.p2NHQ6);
+                    shape.Add(ShapeDerivatives.p3NHQ6);
+                    shape.Add(ShapeDerivatives.p1NHQ7);
+                    shape.Add(ShapeDerivatives.p2NHQ7);
+                    shape.Add(ShapeDerivatives.p3NHQ7);
+                    shape.Add(ShapeDerivatives.p1NHQ8);
+                    shape.Add(ShapeDerivatives.p2NHQ8);
+                    shape.Add(ShapeDerivatives.p3NHQ8);
+                    shape.Add(ShapeDerivatives.p1NHQ9);
+                    shape.Add(ShapeDerivatives.p2NHQ9);
+                    shape.Add(ShapeDerivatives.p3NHQ9);
+                    shape.Add(ShapeDerivatives.p1NHQ10);
+                    shape.Add(ShapeDerivatives.p2NHQ10);
+                    shape.Add(ShapeDerivatives.p3NHQ10);
+                }
+                if (_ft == FEType.Tetrahedron && _fo == FEOrder.Cubic)
+                {
+                    return null; // 20-node cubic tetrahedron not implemented yet
                 }
                 if (_ft == FEType.Hexaedron && _fo == FEOrder.Linear)
                 {
@@ -346,7 +382,153 @@ namespace NumIntegration
                     shape.Add(ShapeDerivatives.p1NXL8);
                     shape.Add(ShapeDerivatives.p2NXL8);
                     shape.Add(ShapeDerivatives.p3NXL8);
-
+                }
+                if (_ft == FEType.Hexaedron && _fo == FEOrder.Quadratic)
+                {
+                    shape.Add(ShapeDerivatives.p1NXQ1);
+                    shape.Add(ShapeDerivatives.p2NXQ1);
+                    shape.Add(ShapeDerivatives.p3NXQ1);
+                    shape.Add(ShapeDerivatives.p1NXQ2);
+                    shape.Add(ShapeDerivatives.p2NXQ2);
+                    shape.Add(ShapeDerivatives.p3NXQ2);
+                    shape.Add(ShapeDerivatives.p1NXQ3);
+                    shape.Add(ShapeDerivatives.p2NXQ3);
+                    shape.Add(ShapeDerivatives.p3NXQ3);
+                    shape.Add(ShapeDerivatives.p1NXQ4);
+                    shape.Add(ShapeDerivatives.p2NXQ4);
+                    shape.Add(ShapeDerivatives.p3NXQ4);
+                    shape.Add(ShapeDerivatives.p1NXQ5);
+                    shape.Add(ShapeDerivatives.p2NXQ5);
+                    shape.Add(ShapeDerivatives.p3NXQ5);
+                    shape.Add(ShapeDerivatives.p1NXQ6);
+                    shape.Add(ShapeDerivatives.p2NXQ6);
+                    shape.Add(ShapeDerivatives.p3NXQ6);
+                    shape.Add(ShapeDerivatives.p1NXQ7);
+                    shape.Add(ShapeDerivatives.p2NXQ7);
+                    shape.Add(ShapeDerivatives.p3NXQ7);
+                    shape.Add(ShapeDerivatives.p1NXQ8);
+                    shape.Add(ShapeDerivatives.p2NXQ8);
+                    shape.Add(ShapeDerivatives.p3NXQ8);
+                    shape.Add(ShapeDerivatives.p1NXQ9);
+                    shape.Add(ShapeDerivatives.p2NXQ9);
+                    shape.Add(ShapeDerivatives.p3NXQ9);
+                    shape.Add(ShapeDerivatives.p1NXQ10);
+                    shape.Add(ShapeDerivatives.p2NXQ10);
+                    shape.Add(ShapeDerivatives.p3NXQ10);
+                    shape.Add(ShapeDerivatives.p1NXQ11);
+                    shape.Add(ShapeDerivatives.p2NXQ11);
+                    shape.Add(ShapeDerivatives.p3NXQ11);
+                    shape.Add(ShapeDerivatives.p1NXQ12);
+                    shape.Add(ShapeDerivatives.p2NXQ12);
+                    shape.Add(ShapeDerivatives.p3NXQ12);
+                    shape.Add(ShapeDerivatives.p1NXQ13);
+                    shape.Add(ShapeDerivatives.p2NXQ13);
+                    shape.Add(ShapeDerivatives.p3NXQ13);
+                    shape.Add(ShapeDerivatives.p1NXQ14);
+                    shape.Add(ShapeDerivatives.p2NXQ14);
+                    shape.Add(ShapeDerivatives.p3NXQ14);
+                    shape.Add(ShapeDerivatives.p1NXQ15);
+                    shape.Add(ShapeDerivatives.p2NXQ15);
+                    shape.Add(ShapeDerivatives.p3NXQ15);
+                    shape.Add(ShapeDerivatives.p1NXQ16);
+                    shape.Add(ShapeDerivatives.p2NXQ16);
+                    shape.Add(ShapeDerivatives.p3NXQ16);
+                    shape.Add(ShapeDerivatives.p1NXQ17);
+                    shape.Add(ShapeDerivatives.p2NXQ17);
+                    shape.Add(ShapeDerivatives.p3NXQ17);
+                    shape.Add(ShapeDerivatives.p1NXQ18);
+                    shape.Add(ShapeDerivatives.p2NXQ18);
+                    shape.Add(ShapeDerivatives.p3NXQ18);
+                    shape.Add(ShapeDerivatives.p1NXQ19);
+                    shape.Add(ShapeDerivatives.p2NXQ19);
+                    shape.Add(ShapeDerivatives.p3NXQ19);
+                    shape.Add(ShapeDerivatives.p1NXQ20);
+                    shape.Add(ShapeDerivatives.p2NXQ20);
+                    shape.Add(ShapeDerivatives.p3NXQ20);
+                }
+                if (_ft == FEType.Hexaedron && _fo == FEOrder.Cubic)
+                {
+                    shape.Add(ShapeDerivatives.p1NXC1);
+                    shape.Add(ShapeDerivatives.p2NXC1);
+                    shape.Add(ShapeDerivatives.p3NXC1);
+                    shape.Add(ShapeDerivatives.p1NXC2);
+                    shape.Add(ShapeDerivatives.p2NXC2);
+                    shape.Add(ShapeDerivatives.p3NXC2);
+                    shape.Add(ShapeDerivatives.p1NXC3);
+                    shape.Add(ShapeDerivatives.p2NXC3);
+                    shape.Add(ShapeDerivatives.p3NXC3);
+                    shape.Add(ShapeDerivatives.p1NXC4);
+                    shape.Add(ShapeDerivatives.p2NXC4);
+                    shape.Add(ShapeDerivatives.p3NXC4);
+                    shape.Add(ShapeDerivatives.p1NXC5);
+                    shape.Add(ShapeDerivatives.p2NXC5);
+                    shape.Add(ShapeDerivatives.p3NXC5);
+                    shape.Add(ShapeDerivatives.p1NXC6);
+                    shape.Add(ShapeDerivatives.p2NXC6);
+                    shape.Add(ShapeDerivatives.p3NXC6);
+                    shape.Add(ShapeDerivatives.p1NXC7);
+                    shape.Add(ShapeDerivatives.p2NXC7);
+                    shape.Add(ShapeDerivatives.p3NXC7);
+                    shape.Add(ShapeDerivatives.p1NXC8);
+                    shape.Add(ShapeDerivatives.p2NXC8);
+                    shape.Add(ShapeDerivatives.p3NXC8);
+                    shape.Add(ShapeDerivatives.p1NXC9);
+                    shape.Add(ShapeDerivatives.p2NXC9);
+                    shape.Add(ShapeDerivatives.p3NXC9);
+                    shape.Add(ShapeDerivatives.p1NXC10);
+                    shape.Add(ShapeDerivatives.p2NXC10);
+                    shape.Add(ShapeDerivatives.p3NXC10);
+                    shape.Add(ShapeDerivatives.p1NXC11);
+                    shape.Add(ShapeDerivatives.p2NXC11);
+                    shape.Add(ShapeDerivatives.p3NXC11);
+                    shape.Add(ShapeDerivatives.p1NXC12);
+                    shape.Add(ShapeDerivatives.p2NXC12);
+                    shape.Add(ShapeDerivatives.p3NXC12);
+                    shape.Add(ShapeDerivatives.p1NXC13);
+                    shape.Add(ShapeDerivatives.p2NXC13);
+                    shape.Add(ShapeDerivatives.p3NXC13);
+                    shape.Add(ShapeDerivatives.p1NXC14);
+                    shape.Add(ShapeDerivatives.p2NXC14);
+                    shape.Add(ShapeDerivatives.p3NXC14);
+                    shape.Add(ShapeDerivatives.p1NXC15);
+                    shape.Add(ShapeDerivatives.p2NXC15);
+                    shape.Add(ShapeDerivatives.p3NXC15);
+                    shape.Add(ShapeDerivatives.p1NXC16);
+                    shape.Add(ShapeDerivatives.p2NXC16);
+                    shape.Add(ShapeDerivatives.p3NXC16);
+                    shape.Add(ShapeDerivatives.p1NXC17);
+                    shape.Add(ShapeDerivatives.p2NXC17);
+                    shape.Add(ShapeDerivatives.p3NXC17);
+                    shape.Add(ShapeDerivatives.p1NXC18);
+                    shape.Add(ShapeDerivatives.p2NXC18);
+                    shape.Add(ShapeDerivatives.p3NXC18);
+                    shape.Add(ShapeDerivatives.p1NXC19);
+                    shape.Add(ShapeDerivatives.p2NXC19);
+                    shape.Add(ShapeDerivatives.p3NXC19);
+                    shape.Add(ShapeDerivatives.p1NXC20);
+                    shape.Add(ShapeDerivatives.p2NXC20);
+                    shape.Add(ShapeDerivatives.p3NXC20);
+                    shape.Add(ShapeDerivatives.p1NXC21);
+                    shape.Add(ShapeDerivatives.p2NXC21);
+                    shape.Add(ShapeDerivatives.p3NXC21);
+                    shape.Add(ShapeDerivatives.p1NXC22);
+                    shape.Add(ShapeDerivatives.p2NXC22);
+                    shape.Add(ShapeDerivatives.p3NXC22);
+                    shape.Add(ShapeDerivatives.p1NXC23);
+                    shape.Add(ShapeDerivatives.p2NXC23);
+                    shape.Add(ShapeDerivatives.p3NXC23);
+                    shape.Add(ShapeDerivatives.p1NXC24);
+                    shape.Add(ShapeDerivatives.p2NXC24);
+                    shape.Add(ShapeDerivatives.p3NXC24);
+                    shape.Add(ShapeDerivatives.p1NXC25);
+                    shape.Add(ShapeDerivatives.p2NXC25);
+                    shape.Add(ShapeDerivatives.p3NXC25);
+                    shape.Add(ShapeDerivatives.p1NXC26);
+                    shape.Add(ShapeDerivatives.p2NXC26);
+                    shape.Add(ShapeDerivatives.p3NXC26);
+                    shape.Add(ShapeDerivatives.p1NXC27);
+                    shape.Add(ShapeDerivatives.p2NXC27);
+                    shape.Add(ShapeDerivatives.p3NXC27);
                 }
 
                 return shape;

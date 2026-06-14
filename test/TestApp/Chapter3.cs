@@ -4,6 +4,14 @@ namespace Book
 {
     internal class Chapter3
     {
+        // ====================================================================
+        // Zadatak 3.01: Izoparametarska formulacija — evaluacija koordinata i Jacobiana
+        // Izračunati koordinate i Jacobian u zadanim tačkama ξ₁=-0.75, ξ₂=0.55
+        // za dva kvadratna linijska KE:
+        //   a) KE sa ravnomjerno raspoređenim čvorovima (x₃=1.0),
+        //   b) KE sa pomjerenim srednjim čvorom (x₃=2/3).
+        // Pokazuje uticaj položaja unutrašnjeg čvora na vrijednost Jacobiana.
+        // ====================================================================
         public static void Example1()
         {
             var fe1 = new FiniteElement()
@@ -59,7 +67,12 @@ namespace Book
             Console.WriteLine($" b) - Evaluacija Jacobiana  J(xi1)={jb1}, J(xi2)={jb2}");
         }
 
-        //Krivolinijski integral-određivanje duzine luka
+        // ====================================================================
+        // Zadatak 3.02: Krivolinijski integral — dužina luka
+        // Numeričkim putem odrediti dužinu luka krive y=x²+2x,
+        // na segmentu x=[0,2]. Koristi kvadratni linijski KE
+        // sa tri čvora i izoparametarsku formulaciju.
+        // ====================================================================
         public static void Example2()
         {
             var fe1 = new FiniteElement()

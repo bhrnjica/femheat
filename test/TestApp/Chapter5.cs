@@ -6,10 +6,12 @@ namespace Book
     {
 
         // ====================================================================
-        // Zadatak 5.02: Kompozitni zid sa tri sloja — FEM rješenje
-        // Implementacija zadatka zad:05-01 korištenjem NumIntegration biblioteke.
-        // Određivanje temperatura u čvorovima kompozitnog zida (stiropor-drvo-čelik)
-        // korištenjem izoparametarske formulacije MKE.
+        // Zadatak 5.02: Implementirati program za rješavanje zadatka 05-01
+        // korištenjem NumIntegration biblioteke. Program definiše tri
+        // linijska KE (po jedan za svaki sloj kompozitnog zida:
+        // stiropor–drvo–čelik), formira globalnu matricu krutosti [K] i
+        // vektor opterećenja {F} korištenjem klase Mesh1D, te rješava
+        // sistem Gaussovom eliminacijom (Gaussian.Solve).
         // ====================================================================
         public static void Zadatak_05_02()
         {

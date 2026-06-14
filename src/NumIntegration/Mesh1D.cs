@@ -5,7 +5,7 @@ namespace NumIntegration
     /// globalne matrice krutosti i vektora opterećenja za stacionarni
     /// prenos toplote kroz ravni zid.
     /// 
-    /// Podržava linearne i kvadratne linijske konačne elemente.
+    /// Podržava linearne, kvadratne i kubne linijske konačne elemente.
     /// Granični uvjeti: zadati toplotni tok (lijevo) i konvekcija (desno).
     /// </summary>
     public class Mesh1D
@@ -144,6 +144,14 @@ namespace NumIntegration
                     {  7.0 / 3.0 * coeff, -8.0 / 3.0 * coeff,  1.0 / 3.0 * coeff },
                     { -8.0 / 3.0 * coeff, 16.0 / 3.0 * coeff, -8.0 / 3.0 * coeff },
                     {  1.0 / 3.0 * coeff, -8.0 / 3.0 * coeff,  7.0 / 3.0 * coeff },
+                },
+
+                FEOrder.Cubic => new double[,]
+                {
+                    {  148.0 / 40.0 * coeff, -189.0 / 40.0 * coeff,   54.0 / 40.0 * coeff,  -13.0 / 40.0 * coeff },
+                    { -189.0 / 40.0 * coeff,  432.0 / 40.0 * coeff, -297.0 / 40.0 * coeff,   54.0 / 40.0 * coeff },
+                    {   54.0 / 40.0 * coeff, -297.0 / 40.0 * coeff,  432.0 / 40.0 * coeff, -189.0 / 40.0 * coeff },
+                    {  -13.0 / 40.0 * coeff,   54.0 / 40.0 * coeff, -189.0 / 40.0 * coeff,  148.0 / 40.0 * coeff },
                 },
 
                 _ => throw new NotSupportedException(

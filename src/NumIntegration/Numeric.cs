@@ -26,8 +26,9 @@ namespace NumIntegration
         {
             try
             {
-                function = context?.CompileGeneric<double>(strExpression);
-
+                function = context?.CompileGeneric<double>(strExpression)
+                                ?? throw new NullReferenceException(nameof(function));
+                
                 var gv = Gaussian.NullsAndWeights(_domain.ft, degreeofPrecision);
                 
                 if(gv is null || gv.gi is null || 
