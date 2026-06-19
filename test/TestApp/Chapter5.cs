@@ -481,5 +481,260 @@ namespace Book
             Console.WriteLine("\n=== Kraj zadatka 5.07 ===");
         }
 
+        // ====================================================================
+        // Zadatak 5.09: Konusno rebro promjenjivog poprečnog presjeka
+        // Odvođenje toplote sa rebra u okolinu. Rebro se sužava od debljine
+        // 6 mm u podnožju do 1.5 mm na vrhu. Površinska konvekcija duž
+        // rebra + konvekcija na vrhu. Korišten Mesh1D sa IsFin=true za
+        // automatsko dodavanje matrica površinske konvekcije.
+        // Slučaj (a): dva linijska KE. Slučaj (b): jedan kvadratni KE.
+        // Izračunava odvedenu toplotu i efikasnost rebra.
+        // ====================================================================
+        public static void Zadatak_05_09()
+        {
+            Console.WriteLine("=== Zadatak 5.09: Konusno rebro ===");
+            Console.WriteLine("MKE rješenje korištenjem izoparametarske formulacije\n");
+
+            // ---------- 1. Geometrijski i fizički parametri ----------
+            double L = 0.08;           // m — dužina rebra (8 cm)
+            double b = 0.003;          // m — širina rebra (3 mm)
+            double d1 = 0.006;         // m — debljina u podnožju (6 mm)
+            double d2 = 0.0015;        // m — debljina na vrhu (1.5 mm)
+            double lambda = 150.0;     // W/(m·°C) — toplotna provodnost
+            double alpha = 80.0;       // W/(m²·°C) — koef. prelaza toplote
+            double theta_b = 120.0;    // °C — temperatura podnožja
+            double theta_inf = 25.0;   // °C — temperatura okoline
+
+            // Pomoćne funkcije za debljinu, površinu i obim
+            double Thickness(double x) => d1 + (d2 - d1) * x / L;
+            double Area(double x) => b * Thickness(x);
+            double Perimeter(double x) => 2.0 * (b + Thickness(x));
+
+            // Pozicije čvorova
+            double x1 = 0.0, x2 = L / 2.0, x3 = L;
+
+            // Površine i obimi po čvorovima (za VariableCrossSection i IsFin)
+            double[] areas = { Area(x1), Area(x2), Area(x3) };
+            double[] perimeters = { Perimeter(x1), Perimeter(x2), Perimeter(x3) };
+
+            // Ukupna površina rebra za efikasnost
+            double A_surf = 2 * b * L + (d1 + d2) * L + b * d2;
+            double Q_ideal = alpha * A_surf * (theta_b - theta_inf);
+
+            // ================================================================
+            // SLUČAJ (a): Dva linijska KE
+            // ================================================================
+            Console.WriteLine("--- (a) Dva linijska konačna elementa ---\n");
+
+            Console.WriteLine("Čvorovi i njihove geometrijske karakteristike:");
+            Console.WriteLine($"  Čvor 1 (x=0.0 mm):     d={Thickness(x1)*1000:F2} mm, "
+                + $"A={Area(x1):E2} m², O={Perimeter(x1):F4} m");
+            Console.WriteLine($"  Čvor 2 (x=40.0 mm):    d={Thickness(x2)*1000:F2} mm, "
+                + $"A={Area(x2):E2} m², O={Perimeter(x2):F4} m");
+            Console.WriteLine($"  Čvor 3 (x=80.0 mm):    d={Thickness(x3)*1000:F2} mm, "
+                + $"A={Area(x3):E2} m², O={Perimeter(x3):F4} m\n");
+
+            // Definicija dva linijska KE
+            var fe1 = new FiniteElement()
+            {
+                nodes = new[]
+                {
+                    new Node("1", x1),   // podnožje
+                    new Node("2", x2),   // sredina
+                },
+                ft = FEType.Line,
+                fo = FEOrder.Linear,
+            };
+
+            var fe2 = new FiniteElement()
+            {
+                nodes = new[]
+                {
+                    new Node("1", x2),   // sredina (lokalni čvor 1)
+                    new Node("2", x3),   // vrh
+                },
+                ft = FEType.Line,
+                fo = FEOrder.Linear,
+            };
+
+            // Mesh1D sa uključenom analizom rebra (IsFin)
+            var meshLinear = new Mesh1D([fe1, fe2],
+                                         [lambda, lambda],
+                                         areas)
+            {
+                VariableCrossSection = true,
+                IsFin = true,
+                Perimeters = perimeters,
+                SurfaceConvectionCoeff = alpha,
+                SurfaceAmbientTemp = theta_inf,
+                RightConvectionCoeff = alpha,    // konvekcija na vrhu
+                RightAmbientTemp = theta_inf,
+            };
+
+            // Sklapanje originalnog sistema (prije modifikacije G.U.)
+            var (K_lin_orig, F_lin_orig) = meshLinear.Assemble();
+            int n_lin = meshLinear.NodeCount;
+
+            // Sačuvaj originalni sistem za izračunavanje reakcije
+            double[,] K_lin_full = (double[,])K_lin_orig.Clone();
+            double[] F_lin_full = (double[])F_lin_orig.Clone();
+
+            // Dirichletov G.U.: ϑ₁ = ϑ_b
+            // Modifikuj red 0: postavi dijagonalu na 1, ostalo na 0
+            K_lin_orig[0, 0] = 1; K_lin_orig[0, 1] = 0; K_lin_orig[0, 2] = 0;
+            F_lin_orig[0] = theta_b;
+            // Modifikuj redove 1 i 2: prebaci poznati član na desnu stranu
+            F_lin_orig[1] -= K_lin_orig[1, 0] * theta_b;
+            K_lin_orig[1, 0] = 0;
+            F_lin_orig[2] -= K_lin_orig[2, 0] * theta_b;
+            K_lin_orig[2, 0] = 0;
+
+            Console.WriteLine("--- Globalni sistem [K]{ϑ} = {F} (nakon G.U.) ---");
+            Console.WriteLine($"Broj elemenata: {meshLinear.ElementCount}, "
+                + $"broj čvorova: {n_lin}");
+            Console.WriteLine("Matrica krutosti [K]:");
+            for (int i = 0; i < n_lin; i++)
+            {
+                Console.Write("  [ ");
+                for (int j = 0; j < n_lin; j++)
+                    Console.Write($"{K_lin_orig[i, j],10:F6} ");
+                Console.WriteLine("]");
+            }
+            Console.Write($"\nVektor opterećenja {{F}}: "
+                + $"{{ {F_lin_orig[0]:F6}, {F_lin_orig[1]:F6}, "
+                + $"{F_lin_orig[2]:F6} }}\n\n");
+
+            // Rješavanje sistema
+            double[] theta_lin = Gaussian.Solve(K_lin_orig, F_lin_orig, n_lin);
+
+            Console.WriteLine("--- Rezultati (a) ---");
+            Console.WriteLine($"  ϑ₁ = {theta_lin[0]:F2} °C  "
+                + $"(x=0.0 mm, podnožje)");
+            Console.WriteLine($"  ϑ₂ = {theta_lin[1]:F2} °C  "
+                + $"(x=40.0 mm, sredina)");
+            Console.WriteLine($"  ϑ₃ = {theta_lin[2]:F2} °C  "
+                + $"(x=80.0 mm, vrh)\n");
+
+            // Odvedena toplota (reakcija u čvoru 1 iz originalnog sistema)
+            double Q_linear = K_lin_full[0,0]*theta_lin[0] 
+                            + K_lin_full[0,1]*theta_lin[1] 
+                            + K_lin_full[0,2]*theta_lin[2] 
+                            - F_lin_full[0];
+            double eta_lin = Q_linear / Q_ideal * 100.0;
+
+            Console.WriteLine($"  Odvedena toplota Q = {Q_linear:F4} W");
+            Console.WriteLine($"  Ukupna površina rebra = {A_surf:E3} m²");
+            Console.WriteLine($"  Idealna odvedena toplota = {Q_ideal:F4} W");
+            Console.WriteLine($"  Efikasnost rebra η = {eta_lin:F2}%\n");
+
+            // ================================================================
+            // SLUČAJ (b): Jedan kvadratni KE
+            // ================================================================
+            Console.WriteLine("--- (b) Jedan kvadratni konačni element ---\n");
+
+            var feQuad = new FiniteElement()
+            {
+                nodes = new[]
+                {
+                    new Node("1", x1),   // podnožje
+                    new Node("2", x2),   // sredina
+                    new Node("3", x3),   // vrh
+                },
+                ft = FEType.Line,
+                fo = FEOrder.Quadratic,
+            };
+
+            var meshQuad = new Mesh1D([feQuad],
+                                       [lambda],
+                                       areas)
+            {
+                VariableCrossSection = true,
+                IsFin = true,
+                Perimeters = perimeters,
+                SurfaceConvectionCoeff = alpha,
+                SurfaceAmbientTemp = theta_inf,
+                RightConvectionCoeff = alpha,    // konvekcija na vrhu
+                RightAmbientTemp = theta_inf,
+            };
+
+            var (K_quad_orig, F_quad_orig) = meshQuad.Assemble();
+            int n_quad = meshQuad.NodeCount;
+
+            // Sačuvaj originalni sistem za izračunavanje reakcije
+            double[,] K_quad_full = (double[,])K_quad_orig.Clone();
+            double[] F_quad_full = (double[])F_quad_orig.Clone();
+
+            // Dirichletov G.U.: ϑ₁ = ϑ_b
+            K_quad_orig[0, 0] = 1; K_quad_orig[0, 1] = 0; K_quad_orig[0, 2] = 0;
+            F_quad_orig[0] = theta_b;
+            F_quad_orig[1] -= K_quad_orig[1, 0] * theta_b;
+            K_quad_orig[1, 0] = 0;
+            F_quad_orig[2] -= K_quad_orig[2, 0] * theta_b;
+            K_quad_orig[2, 0] = 0;
+
+            Console.WriteLine("--- Globalni sistem [K]{ϑ} = {F} (nakon G.U.) ---");
+            Console.WriteLine($"Broj elemenata: {meshQuad.ElementCount}, "
+                + $"broj čvorova: {n_quad}");
+            Console.WriteLine("Matrica krutosti [K]:");
+            for (int i = 0; i < n_quad; i++)
+            {
+                Console.Write("  [ ");
+                for (int j = 0; j < n_quad; j++)
+                    Console.Write($"{K_quad_orig[i, j],10:F6} ");
+                Console.WriteLine("]");
+            }
+            Console.Write($"\nVektor opterećenja {{F}}: "
+                + $"{{ {F_quad_orig[0]:F6}, {F_quad_orig[1]:F6}, "
+                + $"{F_quad_orig[2]:F6} }}\n\n");
+
+            // Rješavanje sistema
+            double[] theta_quad = Gaussian.Solve(K_quad_orig, F_quad_orig, n_quad);
+
+            Console.WriteLine("--- Rezultati (b) ---");
+            Console.WriteLine($"  ϑ₁ = {theta_quad[0]:F2} °C  "
+                + $"(x=0.0 mm, podnožje)");
+            Console.WriteLine($"  ϑ₂ = {theta_quad[1]:F2} °C  "
+                + $"(x=40.0 mm, sredina)");
+            Console.WriteLine($"  ϑ₃ = {theta_quad[2]:F2} °C  "
+                + $"(x=80.0 mm, vrh)\n");
+
+            // Odvedena toplota (reakcija u čvoru 1 iz originalnog sistema)
+            double Q_quad = K_quad_full[0,0]*theta_quad[0] 
+                          + K_quad_full[0,1]*theta_quad[1] 
+                          + K_quad_full[0,2]*theta_quad[2] 
+                          - F_quad_full[0];
+            double eta_quad = Q_quad / Q_ideal * 100.0;
+
+            Console.WriteLine($"  Odvedena toplota Q = {Q_quad:F4} W");
+            Console.WriteLine($"  Efikasnost rebra η = {eta_quad:F2}%\n");
+
+            // ================================================================
+            // Usporedba rezultata
+            // ================================================================
+            Console.WriteLine("--- Usporedba rezultata ---");
+            Console.WriteLine($"  {"",-20} {"2 lin. KE",-15} {"1 kvad. KE",-15}");
+            Console.WriteLine($"  {"ϑ₁ [°C]",-20} {theta_lin[0],-15:F2} "
+                + $"{theta_quad[0],-15:F2}");
+            Console.WriteLine($"  {"ϑ₂ [°C]",-20} {theta_lin[1],-15:F2} "
+                + $"{theta_quad[1],-15:F2}");
+            Console.WriteLine($"  {"ϑ₃ [°C]",-20} {theta_lin[2],-15:F2} "
+                + $"{theta_quad[2],-15:F2}");
+            Console.WriteLine($"  {"Q [W]",-20} {Q_linear,-15:F4} "
+                + $"{Q_quad,-15:F4}");
+            Console.WriteLine($"  {"η [%]",-20} {eta_lin,-15:F2} "
+                + $"{eta_quad,-15:F2}");
+
+            // ---------- Fizička interpretacija ----------
+            Console.WriteLine("\n--- Fizička interpretacija ---");
+            Console.WriteLine($"  Pad temperature duž rebra (lin): "
+                + $"Δϑ = {theta_lin[0]-theta_lin[2]:F2} °C");
+            Console.WriteLine($"  Pad temperature duž rebra (kvad): "
+                + $"Δϑ = {theta_quad[0]-theta_quad[2]:F2} °C");
+            Console.WriteLine($"  Efikasnost rebra je oko {eta_lin:F0}–{eta_quad:F0}%, "
+                + $"što je očekivano za konusno rebro ovakvih dimenzija.");
+
+            Console.WriteLine("\n=== Kraj zadatka 5.09 ===");
+        }
+
     }
 }
