@@ -92,6 +92,7 @@ namespace NumIntegration
 
                 return shape;
             }
+            
             if (_ft == FEType.Rectangle || _ft == FEType.Triangle)
             {
                 if (_ft == FEType.Triangle && _fo == FEOrder.Linear)
