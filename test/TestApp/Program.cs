@@ -15,3 +15,9 @@ Console.WriteLine("\n");
 Chapter6.Zadatak_06_04();
 Console.WriteLine("\n");
 Chapter6.Zadatak_06_06();
+
+Console.WriteLine("\n================================================");
+Console.WriteLine("  POGLAVLJE 7 — Osno-simetricni i 3D problemi");
+Console.WriteLine("================================================\n");
+
+Chapter7.Zadatak_07_02();

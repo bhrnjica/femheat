@@ -67,6 +67,14 @@ namespace NumIntegration
         /// <summary>Lista graničnih uslova po ivicama elemenata.</summary>
         public List<EdgeBoundaryCondition> EdgeBCs { get; set; } = new();
 
+        /// <summary>
+        /// Da li je problem osno-simetričan (axisymmetric).
+        /// Kada je true, svi zapreminski integrali se množe faktorom 2π·r,
+        /// a površinski integrali po ivicama faktorom 2π·r, gde je
+        /// r = x-koordinata (radijalna koordinata) u (r,z) ravni.
+        /// </summary>
+        public bool IsAxisymmetric { get; set; } = false;
+
         /// <summary>Ukupan broj čvorova u mreži.</summary>
         public int NodeCount => _nodeCount;
 
@@ -225,6 +233,11 @@ namespace NumIntegration
                 // Interpolirana debljina u Gaussovoj tački
                 double d_g = GetThicknessAtGaussPoint(fe, xi, eta);
 
+                // Osno-simetrični faktor: 2π · r(ξ,η)
+                double axiFactor = IsAxisymmetric
+                    ? 2.0 * Math.PI * GetRadiusAtGaussPoint(fe, xi, eta)
+                    : 1.0;
+
                 // B^T B → (m × m), pomnoženo sa detJ, debljinom i težinom
                 for (int a = 0; a < m; a++)
                 {
@@ -233,7 +246,7 @@ namespace NumIntegration
                         double sum = 0;
                         for (int k = 0; k < 2; k++) // dve vrste B (∂/∂x, ∂/∂y)
                             sum += B[k, a] * B[k, b];
-                        Ke[a, b] += lambda * d_g * sum * detJ * w;
+                        Ke[a, b] += lambda * d_g * sum * detJ * w * axiFactor;
                     }
                 }
             }
@@ -288,8 +301,13 @@ namespace NumIntegration
                 // Interpolirana debljina u Gaussovoj tački
                 double d_g = GetThicknessAtGaussPoint(fe, xi, eta);
 
+                // Osno-simetrični faktor: 2π · r(ξ,η)
+                double axiFactor = IsAxisymmetric
+                    ? 2.0 * Math.PI * GetRadiusAtGaussPoint(fe, xi, eta)
+                    : 1.0;
+
                 for (int a = 0; a < m; a++)
-                    fe_vec[a] += HeatSource * d_g * N[a] * detJ * w;
+                    fe_vec[a] += HeatSource * d_g * N[a] * detJ * w * axiFactor;
             }
 
             return fe_vec;
@@ -336,22 +354,27 @@ namespace NumIntegration
                 // Interpolirana debljina duž ivice
                 double d_edge = GetThicknessOnEdge(fe, bc.EdgeIndex, t);
 
+                // Osno-simetrični faktor: 2π · r(t) duž ivice
+                double axiFactor = IsAxisymmetric
+                    ? 2.0 * Math.PI * GetRadiusOnEdge(fe, bc.EdgeIndex, t)
+                    : 1.0;
+
                 if (bc.BCType == BoundaryConditionType.Convection)
                 {
                     double alpha = bc.ConvectionCoeff;
                     double theta_inf = bc.AmbientTemp;
 
-                    // K_α += α·d·ds · N N^T
+                    // K_α += α·d·ds · N N^T  (× 2πr za axisymmetric)
                     for (int a = 0; a < m; a++)
                     {
                         int gi = localToGlobal[a] - 1;
                         for (int b = 0; b < m; b++)
                         {
                             int gj = localToGlobal[b] - 1;
-                            K[gi, gj] += alpha * d_edge * N[a] * N[b] * ds;
+                            K[gi, gj] += alpha * d_edge * N[a] * N[b] * ds * axiFactor;
                         }
-                        // f_α += α·ϑ∞·d·ds · N
-                        F[gi] += alpha * theta_inf * d_edge * N[a] * ds;
+                        // f_α += α·ϑ∞·d·ds · N  (× 2πr za axisymmetric)
+                        F[gi] += alpha * theta_inf * d_edge * N[a] * ds * axiFactor;
                     }
                 }
                 else if (bc.BCType == BoundaryConditionType.HeatFlux)
@@ -361,11 +384,11 @@ namespace NumIntegration
                     for (int a = 0; a < m; a++)
                     {
                         int gi = localToGlobal[a] - 1;
-                        // f_q = -q·d·ds · N
+                        // f_q = -q·d·ds · N  (× 2πr za axisymmetric)
                         // Konvencija: HeatFlux = q_n = -λ ∂ϑ/∂n (toplotni tok
                         // u smjeru vanjske normale, pozitivan kada napušta domen).
                         // Za toplotu koja ulazi u domen, zadati negativnu vrijednost.
-                        F[gi] += -q * d_edge * N[a] * ds;
+                        F[gi] += -q * d_edge * N[a] * ds * axiFactor;
                     }
                 }
             }
@@ -423,12 +446,12 @@ namespace NumIntegration
             {
                 FEType.Triangle => edgeIdx switch
                 {
-                    // ivica 0 (0→1): ξ=t (0→1), η=0
-                    0 => ((t + 1) / 2.0, 0.0),
-                    // ivica 1 (1→2): ξ=1-η, η=t (0→1)
-                    1 => ((1 - (t + 1) / 2.0), (t + 1) / 2.0),
-                    // ivica 2 (2→0): ξ=0, η=1-t (1→0)
-                    2 => (0.0, 1 - (t + 1) / 2.0),
+                    // ivica 0 (0→1): (1,0) → (0,1)
+                    0 => ((1 - t) / 2.0, (1 + t) / 2.0),
+                    // ivica 1 (1→2): (0,1) → (0,0)
+                    1 => (0.0, (1 - t) / 2.0),
+                    // ivica 2 (2→0): (0,0) → (1,0)
+                    2 => ((1 + t) / 2.0, 0.0),
                     _ => throw new ArgumentException($"Ivica {edgeIdx} nije validna za trougao.")
                 },
                 FEType.Rectangle => edgeIdx switch
@@ -553,6 +576,41 @@ namespace NumIntegration
 
             (double xi, double eta) = MapEdgeToNatural(fe.ft, edgeIdx, t);
             return GetThicknessAtGaussPoint(fe, xi, eta);
+        }
+
+        // ==================== PODRŠKA ZA OSNO-SIMETRIČNE PROBLEME ====================
+
+        /// <summary>
+        /// Vraća radijalnu koordinatu r u Gaussovoj tački (ξ,η) unutar elementa.
+        /// r(ξ,η) = Σ N_i(ξ,η) · x_i, gde je x_i = r-koordinata čvora i.
+        /// Koristi se samo kada je IsAxisymmetric = true.
+        /// </summary>
+        private double GetRadiusAtGaussPoint(FiniteElement fe, double xi, double eta)
+        {
+            int m = fe.nodes.Length;
+            double[] N = GetShapeFunctions(fe.ft, m, xi, eta);
+            double r = 0;
+            for (int i = 0; i < m; i++)
+                r += N[i] * fe.nodes[i].x; // x-koordinata = radijus r
+            return r;
+        }
+
+        /// <summary>
+        /// Vraća radijalnu koordinatu r duž ivice elementa u tački t ∈ [-1,1].
+        /// r(t) = Σ N_i(t) · r_i, gde su r_i x-koordinate čvorova ivice.
+        /// Koristi se samo kada je IsAxisymmetric = true.
+        /// </summary>
+        private double GetRadiusOnEdge(FiniteElement fe, int edgeIdx, double t)
+        {
+            // Linearna interpolacija duž ivice: r(t) = N1(t)·r1 + N2(t)·r2
+            double N1 = 0.5 * (1.0 - t);
+            double N2 = 0.5 * (1.0 + t);
+
+            var edgeNodes = GetEdgeLocalNodes(fe.ft, edgeIdx);
+            double r1 = fe.nodes[edgeNodes[0]].x;
+            double r2 = fe.nodes[edgeNodes[1]].x;
+
+            return N1 * r1 + N2 * r2;
         }
     }
 }
