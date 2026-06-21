@@ -112,5 +112,71 @@ namespace Book
 
             Console.WriteLine("\n=== Kraj zadatka 7.02 ===");
         }
+
+        // ====================================================================
+        // Zadatak 7.04: 3D kocka s mjesovitim granicnim uvjetima
+        // Celicna kocka a=0.1 m, λ=50 W/(m·°C)
+        // Dno: Dirichlet ϑ=100°C, vrh: konvekcija α=200, ϑ∞=20°C
+        // Bocne strane: izolovane (q=0)
+        // MKE rjesenje s 1 heksaedrom, koristi UniformMesh3D.Assemble().
+        // ====================================================================
+        public static void Zadatak_07_04()
+        {
+            Console.WriteLine("=== Zadatak 7.04: 3D kocka s mjesovitim G.U. ===");
+            Console.WriteLine("MKE rjesenje s 1 heksaedrom (8 cvorova)\n");
+
+            // ---------- 1. Fizicki parametri ----------
+            double a = 0.1;             // m — stranica kocke
+            double lambda = 50.0;       // W/(m·°C) — celik
+            double alpha = 200.0;       // W/(m²·°C) — koef. konvekcije
+            double theta_inf = 20.0;    // °C — temperatura okoline
+            double theta_bottom = 100.0; // °C — temperatura dna
+
+            // ---------- 2. Uniformna heksaedarska mreza 1×1×1 ----------
+            var mesh3D = UniformMesh3D.CreateUniformHexMesh(
+                0.0, a, 1,   // x: [0, a]
+                0.0, a, 1,   // y: [0, a]
+                0.0, a, 1,   // z: [0, a]
+                lambda);      // λ za sve elemente
+
+            // Robinov G.U. na gornjoj strani (ζ=+1, face 1)
+            mesh3D.FaceBCs = new List<FaceBoundaryCondition>
+            {
+                new()
+                {
+                    ElementIndex = 0,
+                    FaceIndex = 1,       // gornja strana (ζ=+1)
+                    BCType = FaceBoundaryConditionType.Convection,
+                    ConvectionCoeff = alpha,
+                    AmbientTemp = theta_inf
+                }
+            };
+
+            // ---------- 3. Sklapanje globalnog sistema ----------
+            var (K, F) = mesh3D.Assemble();
+            int n = mesh3D.NodeCount;
+
+            Console.WriteLine($"Broj elemenata: {mesh3D.ElementsCount}, cvorova: {n}");
+
+            // ---------- 4. Dirichletovi G.U. na dnu ----------
+            int[] bottomNodes = { 0, 1, 2, 3 }; // cvorovi 1-4 (0-based)
+            foreach (int k in bottomNodes)
+            {
+                for (int i = 0; i < n; i++)
+                    if (i != k && Math.Abs(K[i, k]) > 1e-15)
+                        { F[i] -= K[i, k] * theta_bottom; K[i, k] = 0; }
+                for (int j = 0; j < n; j++) K[k, j] = 0;
+                K[k, k] = 1; F[k] = theta_bottom;
+            }
+
+            // ---------- 5. Rjesavanje ----------
+            double[] theta = Gaussian.Solve(K, F, n);
+
+            Console.WriteLine("\n--- Rjesenje ---");
+            for (int i = 0; i < n; i++)
+                Console.WriteLine($"  ϑ{i + 1} = {theta[i]:F2} °C");
+
+            Console.WriteLine("\n=== Kraj zadatka 7.04 ===");
+        }
     }
 }
