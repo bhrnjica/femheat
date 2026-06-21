@@ -97,7 +97,7 @@ namespace xUnitTestProject1
 
             Assert.Equal(0.37099833686332434, result, 2);
 
-            Assert.Equal(0.4406867935, result1, 1);//****
+            Assert.Equal(0.4406867935, result1, 1);
 
             Assert.Equal(0.419673273704, result2, 3);
         }

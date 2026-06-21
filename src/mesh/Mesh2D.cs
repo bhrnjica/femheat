@@ -59,7 +59,7 @@ namespace NumIntegration
         /// koristeći iste bazne funkcije kao i za temperaturno polje.
         /// Kada nije zadana (null ili prazna), koristi se konstantna Thickness.
         /// </summary>
-        public Dictionary<int, double> NodeThicknesses { get; set; } = null;
+        public Dictionary<int, double>? NodeThicknesses { get; set; }
 
         /// <summary>Unutrašnji izvor toplote G [W/m³]. Podrazumevano: 0.</summary>
         public double HeatSource { get; set; } = 0.0;

@@ -10,7 +10,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\src\NumIntegration\NumIntegration.csproj" />
+    <ProjectReference Include="..\..\src\femheat.csproj" />
   </ItemGroup>
 
 </Project>

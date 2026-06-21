@@ -8,7 +8,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="../../Lib/Flee/src/Flee/Flee.csproj" />
+    <ProjectReference Include="../Lib/Flee/src/Flee/Flee.csproj" />
   </ItemGroup>
 
 </Project>

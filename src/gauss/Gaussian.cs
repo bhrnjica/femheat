@@ -7,8 +7,8 @@ namespace NumIntegration
     public class Gaussian
     {
         public int n;
-        public double[]? wi;
-        public GPoint[]? gi;
+        public double[] wi = null!;
+        public GPoint[] gi = null!;
 
         static int  integralPoints(FEType ft, DOP dop)
         {

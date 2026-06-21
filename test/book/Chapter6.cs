@@ -16,7 +16,6 @@ namespace Book
 
             // ---------- 1. Fizički parametri ----------
             double lambda = 1.4;    // W/(m·°C) — šamotna opeka
-            double L = 0.6;         // m — stranica ploče
             double d = 1.0;         // m — debljina ploče
 
             // ---------- 2. Čvorovi mreže (3×3, h=0.3 m) ----------
