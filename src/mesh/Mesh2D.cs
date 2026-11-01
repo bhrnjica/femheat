@@ -314,7 +314,7 @@ namespace NumIntegration
         }
 
         /// <summary>
-        /// Primjenjuje granični uslov na ivici elementa.
+        /// Primjenjuje granični uvjet na ivici elementa.
         /// Za konvekciju: K_α += α·d ∫ N N^T ds, f_α += α·ϑ∞·d ∫ N ds
         /// Za toplotni tok: f_q += -q·d ∫ N ds
         /// Integracija duž ivice koristi 1D Gaussovo pravilo.
